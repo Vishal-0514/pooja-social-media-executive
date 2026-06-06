@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pooja Babar — Social Media Executive & Creative Strategist</title>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0414;
+    --bg-2:#130826;
+    --card:#1a0b33;
+    --pink:#ff3ec9;
+    --purple:#a855f7;
+    --violet:#6366f1;
+    --peach:#ffb86b;
+    --text:#ece6ff;
+    --muted:#b6a9d8;
+  }
+  *{ -webkit-font-smoothing: antialiased; }
+  html{ scroll-behavior: smooth; }
+  body{
+    font-family: 'Sora', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+  h1,h2,h3,h4{ font-family:'Space Grotesk', sans-serif; letter-spacing:-0.02em; }
+
+  /* Animated gradient background */
+  .bg-mesh{
+    position: fixed; inset: 0; z-index:-1;
+    background:
+      radial-gradient(900px 600px at 10% -10%, rgba(255,62,201,.35), transparent 60%),
+      radial-gradient(800px 500px at 95% 10%, rgba(168,85,247,.35), transparent 60%),
+      radial-gradient(900px 700px at 50% 100%, rgba(99,102,241,.35), transparent 60%),
+      linear-gradient(180deg,#0b0414,#0b0414);
+    animation: bgPulse 14s ease-in-out infinite alternate;
+  }
+  @keyframes bgPulse{
+    0%{ filter: hue-rotate(0deg) saturate(1);}
+    100%{ filter: hue-rotate(25deg) saturate(1.15);}
+  }
+  .grid-lines{
+    position: fixed; inset:0; z-index:-1;
+    background-image:
+      linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
+  }
+
+  /* Floating blobs */
+  .blob{
+    position:absolute; border-radius:50%; filter: blur(60px); opacity:.55; pointer-events:none;
+    animation: floatBlob 12s ease-in-out infinite;
+  }
+  @keyframes floatBlob{
+    0%,100%{ transform: translateY(0) translateX(0) scale(1);}
+    50%{ transform: translateY(-30px) translateX(20px) scale(1.08);}
+  }
+
+  /* Gradient text */
+  .gradient-text{
+    background: linear-gradient(90deg,#ff3ec9 0%, #a855f7 50%, #6366f1 100%);
+    -webkit-background-clip: text; background-clip:text; color:transparent;
+  }
+  .gradient-text-warm{
+    background: linear-gradient(90deg,#ffb86b,#ff3ec9,#a855f7);
+    -webkit-background-clip: text; background-clip:text; color:transparent;
+  }
+
+  /* Glass card */
+  .glass{
+    background: linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+    border:1px solid rgba(255,255,255,.08);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+  .glass:hover{ border-color: rgba(255,62,201,.45); }
+
+  /* Glow button */
+  .btn-primary{
+    position: relative; overflow:hidden;
+    background: linear-gradient(90deg,#ff3ec9,#a855f7);
+    transition: transform .3s ease, box-shadow .3s ease;
+    box-shadow: 0 10px 40px -10px rgba(255,62,201,.7);
+  }
+  .btn-primary:hover{ transform: translateY(-3px); box-shadow: 0 20px 50px -10px rgba(168,85,247,.8);}
+  .btn-primary::after{
+    content:''; position:absolute; inset:0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.3), transparent);
+    transform: translateX(-100%); transition: transform .6s;
+  }
+  .btn-primary:hover::after{ transform: translateX(100%); }
+
+  .btn-ghost{
+    border:1px solid rgba(255,255,255,.18);
+    transition: all .3s;
+  }
+  .btn-ghost:hover{ border-color: rgba(255,62,201,.7); background: rgba(255,62,201,.08); }
+
+  /* Skill bar */
+  .skill-track{
+    background: rgba(255,255,255,.06);
+    border-radius: 999px; overflow:hidden;
+  }
+  .skill-fill{
+    height: 100%;
+    background: linear-gradient(90deg,#ff3ec9,#a855f7,#6366f1);
+    border-radius: 999px;
+    width: 0%;
+    transition: width 1.6s cubic-bezier(.2,.8,.2,1);
+    position: relative;
+  }
+  .skill-fill::after{
+    content:''; position:absolute; right:0; top:-2px; width:14px; height:14px; border-radius:50%;
+    background: #fff; box-shadow: 0 0 15px #ff3ec9, 0 0 25px #a855f7;
+  }
+
+  /* Reveal on scroll */
+  .reveal{ opacity:0; transform: translateY(40px); transition: opacity .9s ease, transform .9s cubic-bezier(.2,.8,.2,1); }
+  .reveal.in{ opacity:1; transform: translateY(0); }
+  .reveal-delay-1{ transition-delay: .1s;}
+  .reveal-delay-2{ transition-delay: .2s;}
+  .reveal-delay-3{ transition-delay: .3s;}
+  .reveal-delay-4{ transition-delay: .4s;}
+
+  /* Hero animations */
+  .float-avatar{ animation: floatAvatar 6s ease-in-out infinite; }
+  @keyframes floatAvatar{
+    0%,100%{ transform: translateY(0);}
+    50%{ transform: translateY(-14px);}
+  }
+
+  .marquee{
+    display: flex; gap: 3rem; width: max-content;
+    animation: marquee 28s linear infinite;
+  }
+  @keyframes marquee{
+    from{ transform: translateX(0);}
+    to{ transform: translateX(-50%);}
+  }
+
+  /* Tag pill */
+  .pill{
+    border:1px solid rgba(255,255,255,.12);
+    background: rgba(255,255,255,.04);
+    transition: all .3s;
+  }
+  .pill:hover{
+    background: rgba(168,85,247,.15);
+    border-color: rgba(255,62,201,.5);
+    transform: translateY(-2px);
+  }
+
+  /* Timeline */
+  .timeline::before{
+    content:''; position:absolute; left: 20px; top:0; bottom:0; width:2px;
+    background: linear-gradient(180deg, rgba(255,62,201,.8), rgba(99,102,241,.4), transparent);
+  }
+  .dot{
+    position:absolute; left: 11px; top:8px; width:20px; height:20px; border-radius:50%;
+    background: radial-gradient(circle, #fff 0%, #ff3ec9 40%, #a855f7 80%);
+    box-shadow: 0 0 20px rgba(255,62,201,.8);
+  }
+
+  /* Project card hover */
+  .proj-card{
+    transition: transform .4s cubic-bezier(.2,.8,.2,1), box-shadow .4s;
+  }
+  .proj-card:hover{
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 30px 60px -20px rgba(255,62,201,.35);
+  }
+  .proj-img{
+    background: linear-gradient(135deg,#ff3ec9,#a855f7,#6366f1);
+    position:relative; overflow:hidden;
+  }
+  .proj-img::before{
+    content:''; position:absolute; inset:-50%;
+    background: conic-gradient(from 0deg, rgba(255,255,255,.15), transparent 30%, rgba(255,255,255,.15) 60%, transparent 80%);
+    animation: spin 8s linear infinite;
+  }
+  @keyframes spin{ to { transform: rotate(360deg);} }
+
+  /* Nav */
+  .nav-scrolled{
+    background: rgba(11,4,20,.75);
+    border-bottom: 1px solid rgba(255,255,255,.06);
+    backdrop-filter: blur(14px);
+  }
+  .nav-link{ position: relative; }
+  .nav-link::after{
+    content:''; position:absolute; left:0; right:0; bottom:-6px; height:2px;
+    background: linear-gradient(90deg,#ff3ec9,#a855f7);
+    transform: scaleX(0); transform-origin: left; transition: transform .3s;
+  }
+  .nav-link:hover::after{ transform: scaleX(1); }
+
+  /* Stat count */
+  .stat-num{
+    background: linear-gradient(180deg,#fff,#ff9fea);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+
+  /* Cursor glow */
+  .cursor-glow{
+    position: fixed; width: 400px; height:400px; border-radius:50%;
+    background: radial-gradient(circle, rgba(255,62,201,.15), transparent 60%);
+    pointer-events: none; z-index: 0; transform: translate(-50%,-50%);
+    transition: transform .15s ease-out;
+    mix-blend-mode: screen;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar{ width: 10px;}
+  ::-webkit-scrollbar-track{ background: #0b0414;}
+  ::-webkit-scrollbar-thumb{ background: linear-gradient(#ff3ec9,#a855f7); border-radius: 10px;}
+
+  /* Mobile */
+  @media (max-width: 768px){
+    .timeline::before{ left: 12px;}
+    .dot{ left: 3px;}
+  }
+</style>
+</head>
+<body class="relative">
+
+<div class="bg-mesh"></div>
+<div class="grid-lines"></div>
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<!-- NAVIGATION -->
+<nav id="navbar" class="fixed top-0 inset-x-0 z-50 transition-all duration-300">
+  <div class="max-w-7xl mx-auto px-5 md:px-8 py-4 flex items-center justify-between">
+    <a href="#home" class="flex items-center gap-2 group">
+      <div class="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-white"
+           style="background: linear-gradient(135deg,#ff3ec9,#a855f7); box-shadow: 0 8px 30px -5px rgba(255,62,201,.6);">
+        PB
+      </div>
+      <span class="font-semibold tracking-tight text-white/90 group-hover:text-white">Pooja.Babar</span>
+    </a>
+
+    <div class="hidden md:flex items-center gap-8 text-sm text-white/80">
+      <a href="#about" class="nav-link hover:text-white">About</a>
+      <a href="#skills" class="nav-link hover:text-white">Skills</a>
+      <a href="#experience" class="nav-link hover:text-white">Experience</a>
+      <a href="#projects" class="nav-link hover:text-white">Projects</a>
+      <a href="#education" class="nav-link hover:text-white">Education</a>
+      <a href="#contact" class="nav-link hover:text-white">Contact</a>
+    </div>
+
+    <a href="#contact" class="btn-primary text-white text-sm font-semibold px-5 py-2.5 rounded-full hidden md:inline-flex items-center gap-2">
+      Hire Me ✨
+    </a>
+    <button id="menuBtn" class="md:hidden text-white text-2xl">☰</button>
+  </div>
+  <div id="mobileMenu" class="hidden md:hidden glass mx-5 rounded-2xl mb-3">
+    <div class="flex flex-col p-5 gap-4 text-white/90">
+      <a href="#about" class="mobile-link">About</a>
+      <a href="#skills" class="mobile-link">Skills</a>
+      <a href="#experience" class="mobile-link">Experience</a>
+      <a href="#projects" class="mobile-link">Projects</a>
+      <a href="#education" class="mobile-link">Education</a>
+      <a href="#contact" class="mobile-link">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="home" class="relative pt-32 md:pt-40 pb-20 md:pb-28 overflow-hidden">
+  <div class="blob" style="width:400px; height:400px; background:#ff3ec9; top:10%; left:-5%;"></div>
+  <div class="blob" style="width:450px; height:450px; background:#6366f1; top:30%; right:-8%; animation-delay:-4s;"></div>
+
+  <div class="max-w-7xl mx-auto px-5 md:px-8 grid lg:grid-cols-12 gap-10 items-center relative">
+    <div class="lg:col-span-7">
+      <div class="inline-flex items-center gap-2 glass px-4 py-2 rounded-full text-sm text-white/85 mb-6 reveal">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-pink-500"></span>
+        </span>
+        Available for freelance & full-time roles
+      </div>
+
+      <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-[84px] leading-[1.02] font-extrabold text-white reveal reveal-delay-1">
+        Hey, I'm <span class="gradient-text">Pooja Babar</span>
+      </h1>
+
+      <h2 class="mt-5 text-2xl md:text-3xl font-semibold text-white/90 reveal reveal-delay-2">
+        Social Media Executive <span class="text-white/40">•</span> <span class="gradient-text-warm">Creative Strategist</span>
+      </h2>
+
+      <p class="mt-6 text-lg text-white/70 max-w-2xl leading-relaxed reveal reveal-delay-3">
+        I turn ideas into scroll-stopping content. Building brands, boosting engagement, and crafting stories that connect — across Instagram, LinkedIn, Facebook & X.
+      </p>
+
+      <div class="mt-8 flex flex-wrap gap-4 reveal reveal-delay-4">
+        <a href="#contact" class="btn-primary text-white font-semibold px-7 py-4 rounded-full inline-flex items-center gap-2">
+          Let's Work Together
+          <span>→</span>
+        </a>
+        <a href="#projects" class="btn-ghost text-white font-semibold px-7 py-4 rounded-full inline-flex items-center gap-2">
+          View My Work
+        </a>
+      </div>
+
+      <!-- Mini stats -->
+      <div class="mt-12 grid grid-cols-3 gap-4 max-w-xl reveal reveal-delay-4">
+        <div>
+          <div class="stat-num text-3xl md:text-4xl font-extrabold" data-target="2">0</div>
+          <div class="text-sm text-white/60 mt-1">Years Experience</div>
+        </div>
+        <div>
+          <div class="stat-num text-3xl md:text-4xl font-extrabold" data-target="50">0</div>
+          <div class="text-sm text-white/60 mt-1">Campaigns Shipped</div>
+        </div>
+        <div>
+          <div class="stat-num text-3xl md:text-4xl font-extrabold" data-target="100">0</div>
+          <div class="text-sm text-white/60 mt-1">% Brand Growth</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Avatar card -->
+    <div class="lg:col-span-5 reveal reveal-delay-2">
+      <div class="relative float-avatar mx-auto max-w-md">
+        <div class="absolute -inset-4 rounded-[2rem] opacity-60 blur-2xl"
+             style="background: conic-gradient(from 180deg,#ff3ec9,#a855f7,#6366f1,#ff3ec9);"></div>
+        <div class="relative glass rounded-[2rem] p-6 md:p-8">
+          <div class="flex items-center justify-between mb-5">
+            <div class="flex gap-1.5">
+              <span class="w-3 h-3 rounded-full bg-pink-500"></span>
+              <span class="w-3 h-3 rounded-full bg-purple-400"></span>
+              <span class="w-3 h-3 rounded-full bg-indigo-400"></span>
+            </div>
+            <span class="text-xs text-white/50">@pooja.creates</span>
+          </div>
+
+          <div class="relative rounded-3xl overflow-hidden aspect-[4/5] proj-img flex items-center justify-center">
+            <div class="text-[180px] font-black text-white/90 drop-shadow-2xl" style="font-family:'Space Grotesk';">PB</div>
+            <div class="absolute top-4 left-4 glass px-3 py-1.5 rounded-full text-xs text-white font-medium">✨ Social Pro</div>
+            <div class="absolute bottom-4 right-4 glass px-3 py-1.5 rounded-full text-xs text-white font-medium">📍 Mumbai, IN</div>
+          </div>
+
+          <div class="mt-5 flex items-center justify-between">
+            <div>
+              <div class="font-semibold text-white">Pooja Babar</div>
+              <div class="text-sm text-white/60">Content • Design • Strategy</div>
+            </div>
+            <button class="btn-primary text-white text-sm font-semibold px-4 py-2 rounded-full">Follow +</button>
+          </div>
+
+          <div class="mt-5 grid grid-cols-3 gap-2 text-center">
+            <div class="glass rounded-xl py-3">
+              <div class="text-lg font-bold gradient-text">120+</div>
+              <div class="text-[11px] text-white/60">Posts</div>
+            </div>
+            <div class="glass rounded-xl py-3">
+              <div class="text-lg font-bold gradient-text">45K</div>
+              <div class="text-[11px] text-white/60">Reach</div>
+            </div>
+            <div class="glass rounded-xl py-3">
+              <div class="text-lg font-bold gradient-text">8</div>
+              <div class="text-[11px] text-white/60">Tools</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Marquee -->
+  <div class="mt-20 overflow-hidden border-y border-white/10 py-5 bg-white/[0.02]">
+    <div class="marquee text-2xl md:text-3xl font-semibold text-white/70 whitespace-nowrap">
+      <span>Content Strategy ✦</span><span> Reels & Video Editing ✦</span><span> Canva Design ✦</span><span> Influencer Marketing ✦</span><span> Brand Storytelling ✦</span><span> Automation ✦</span><span> SEO & Analytics ✦</span><span> Social Media Management ✦</span>
+      <span>Content Strategy ✦</span><span> Reels & Video Editing ✦</span><span> Canva Design ✦</span><span> Influencer Marketing ✦</span><span> Brand Storytelling ✦</span><span> Automation ✦</span><span> SEO & Analytics ✦</span><span> Social Media Management ✦</span>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="relative py-24 md:py-32">
+  <div class="max-w-7xl mx-auto px-5 md:px-8">
+    <div class="text-center mb-14 reveal">
+      <span class="text-sm uppercase tracking-[0.3em] text-pink-400 font-semibold">About Me</span>
+      <h2 class="text-4xl md:text-6xl font-bold text-white mt-3">The girl behind the feed 📱</h2>
+    </div>
+
+    <div class="grid md:grid-cols-12 gap-8 items-start">
+      <div class="md:col-span-7 reveal">
+        <div class="glass rounded-3xl p-8 md:p-10">
+          <p class="text-lg text-white/80 leading-relaxed">
+            I'm a <span class="gradient-text-warm font-semibold">Social Media & Digital Marketing Professional</span> based in Mumbai with 2+ years of experience building brands that people actually love to follow.
+          </p>
+          <p class="text-lg text-white/70 leading-relaxed mt-5">
+            From planning month-long content calendars to editing reels that trend, I love every part of the creative process. I've managed multi-platform campaigns for brands across Instagram, Facebook, LinkedIn & X — driving real growth through strategy, design and storytelling.
+          </p>
+          <p class="text-lg text-white/70 leading-relaxed mt-5">
+            When I'm not scheduling posts, I'm experimenting with AI tools, exploring new design trends, and obsessing over analytics dashboards.
+          </p>
+
+          <div class="mt-8 flex flex-wrap gap-3">
+            <span class="pill px-4 py-2 rounded-full text-sm text-white/90">🎯 Content Strategy</span>
+            <span class="pill px-4 py-2 rounded-full text-sm text-white/90">🎨 Visual Design</span>
+            <span class="pill px-4 py-2 rounded-full text-sm text-white/90">📊 Analytics</span>
+            <span class="pill px-4 py-2 rounded-full text-sm text-white/90">🤖 AI Workflows</span>
+            <span class="pill px-4 py-2 rounded-full text-sm text-white/90">🎬 Video Editing</span>
+            <span class="pill px-4 py-2 rounded-full text-sm text-white/90">📣 Campaigns</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="md:col-span-5 reveal reveal-delay-2 space-y-5">
+        <div class="glass rounded-3xl p-6 proj-card">
+          <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl"
+                 style="background: linear-gradient(135deg,#ff3ec9,#a855f7);">📍</div>
+            <div>
+              <div class="text-sm text-white/50">Based in</div>
+              <div class="text-lg font-semibold text-white">Mumbai, India</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass rounded-3xl p-6 proj-card">
+          <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl"
+                 style="background: linear-gradient(135deg,#a855f7,#6366f1);">💼</div>
+            <div>
+              <div class="text-sm text-white/50">Experience</div>
+              <div class="text-lg font-semibold text-white">2+ Years • 2 Brands Led</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass rounded-3xl p-6 proj-card">
+          <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl"
+                 style="background: linear-gradient(135deg,#6366f1,#ff3ec9);">💬</div>
+            <div>
+              <div class="text-sm text-white/50">Languages</div>
+              <div class="text-lg font-semibold text-white">English • Hindi • Marathi</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass rounded-3xl p-6 proj-card">
+          <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl"
+                 style="background: linear-gradient(135deg,#ffb86b,#ff3ec9);">🚀</div>
+            <div>
+              <div class="text-sm text-white/50">Currently</div>
+              <div class="text-lg font-semibold text-white">Open to new opportunities</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills" class="relative py-24 md:py-32">
+  <div class="max-w-7xl mx-auto px-5 md:px-8">
+    <div class="text-center mb-14 reveal">
+      <span class="text-sm uppercase tracking-[0.3em] text-pink-400 font-semibold">Superpowers</span>
+      <h2 class="text-4xl md:text-6xl font-bold text-white mt-3">Tools & Skills <span class="gradient-text">I master</span></h2>
+      <p class="text-white/60 mt-4 max-w-xl mx-auto">From design to automation — here's my daily toolbox for creating magic on the internet.</p>
+    </div>
+
+    <!-- Skill cards -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-5 mb-14">
+      <!-- Cards -->
+      <div class="glass rounded-2xl p-6 proj-card reveal">
+        <div class="text-3xl mb-3">🎨</div>
+        <h3 class="text-lg font-bold text-white">Canva</h3>
+        <p class="text-sm text-white/60 mt-1">Social posts, carousels, stories</p>
+        <div class="skill-track mt-5 h-2"><div class="skill-fill" data-width="95"></div></div>
+        <div class="text-xs text-white/50 mt-2 text-right">95%</div>
+      </div>
+      <div class="glass rounded-2xl p-6 proj-card reveal reveal-delay-1">
+        <div class="text-3xl mb-3">✨</div>
+        <h3 class="text-lg font-bold text-white">Adobe Illustrator</h3>
+        <p class="text-sm text-white/60 mt-1">Vector art & brand graphics</p>
+        <div class="skill-track mt-5 h-2"><div class="skill-fill" data-width="82"></div></div>
+        <div class="text-xs text-white/50 mt-2 text-right">82%</div>
+      </div>
+      <div class="glass rounded-2xl p-6 proj-card reveal reveal-delay-2">
+        <div class="text-3xl mb-3">🎬</div>
+        <h3 class="text-lg font-bold text-white">Adobe After Effects</h3>
+        <p class="text-sm text-white/60 mt-1">Motion graphics & animations</p>
+        <div class="skill-track mt-5 h-2"><div class="skill-fill" data-width="78"></div></div>
+        <div class="text-xs text-white/50 mt-2 text-right">78%</div>
+      </div>
+      <div class="glass rounded-2xl p-6 proj-card reveal reveal-delay-3">
+        <div class="text-3xl mb-3">🖌️</div>
+        <h3 class="text-lg font-bold text-white">CorelDRAW</h3>
+        <p class="text-sm text-white/60 mt-1">Print & vector layouts</p>
+        <div class="skill-track mt-5 h-2"><div class="skill-fill" data-width="88"></div></div>
+        <div class="text-xs text-white/50 mt-2 text-right">88%</div>
+      </div>
+      <div class="glass rounded-2xl p-6 proj-card reveal">
+        <div class="text-3xl mb-3">🤖</div>
+        <h3 class="text-lg font-bold text-white">Automation Tools</h3>
+        <p class="text-sm text-white/60 mt-1">ManyChat, scheduling & workflows</p>
+        <div class="skill-track mt-5 h-2"><div class="skill-fill" data-width="90"></div></div>
+        <div class="text-xs text-white/50 mt-2 text-right">90%</div>
+      </div>
+      <div class="glass rounded-2xl p-6 proj-card reveal reveal-delay-1">
+        <div class="text-3xl mb-3">🧠</div>
+        <h3 class="text-lg font-bold text-white">AI Tools</h3>
+        <p class="text-sm text-white/60 mt-1">ChatGPT, Midjourney, AI workflows</p>
+        <div class="skill-track mt-5 h-2"><div class="skill-fill" data-width="92"></div></div>
+        <div class="text-xs text-white/50 mt-2 text-right">92%</div>
+      </div>
+      <div class="glass rounded-2xl p-6 proj-card reveal reveal-delay-2">
+        <div class="text-3xl mb-3">📹</div>
+        <h3 class="text-lg font-bold text-white">Video Editing</h3>
+        <p class="text-sm text-white/60 mt-1">Reels, short-form & storytelling</p>
+        <div class="skill-track mt-5 h-2"><div class="skill-fill" data-width="85"></div></div>
+        <div class="text-xs text-white/50 mt-2 text-right">85%</div>
+      </div>
+      <div class="glass rounded-2xl p-6 proj-card reveal reveal-delay-3">
+        <div class="text-3xl mb-3">📊</div>
+        <h3 class="text-lg font-bold text-white">Strategy & Analytics</h3>
+        <p class="text-sm text-white/60 mt-1">Content calendars & SEO</p>
+        <div class="skill-track mt-5 h-2"><div class="skill-fill" data-width="88"></div></div>
+        <div class="text-xs text-white/50 mt-2 text-right">88%</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience" class="relative py-24 md:py-32">
+  <div class="max-w-7xl mx-auto px-5 md:px-8">
+    <div class="text-center mb-14 reveal">
+      <span class="text-sm uppercase tracking-[0.3em] text-pink-400 font-semibold">Journey</span>
+      <h2 class="text-4xl md:text-6xl font-bold text-white mt-3">Work <span class="gradient-text">Experience</span></h2>
+      <p class="text-white/60 mt-4 max-w-xl mx-auto">Two years of shipping campaigns, leading teams and growing brands.</p>
+    </div>
+
+    <div class="relative timeline pl-14 md:pl-20 max-w-5xl mx-auto space-y-10">
+
+      <!-- Experience 1 -->
+      <div class="relative reveal">
+        <div class="dot"></div>
+        <div class="glass rounded-3xl p-6 md:p-8 proj-card">
+          <div class="flex flex-wrap items-start justify-between gap-4 mb-4">
+            <div>
+              <span class="text-xs font-semibold px-3 py-1 rounded-full" style="background:rgba(255,62,201,.15); color:#ff9fea;">CURRENT ROLE</span>
+              <h3 class="text-2xl md:text-3xl font-bold text-white mt-3">Social Media Executive</h3>
+              <p class="text-white/70 mt-1">Mirchandani Group</p>
+            </div>
+            <div class="text-right">
+              <div class="gradient-text-warm font-bold">Oct 2024 — Present</div>
+              <div class="text-sm text-white/50">Full-time</div>
+            </div>
+          </div>
+          <ul class="space-y-3 text-white/75 text-[15px] leading-relaxed">
+            <li class="flex gap-3"><span class="text-pink-400 mt-0.5">▸</span><span>Coordinated with external marketing agencies to execute multi-platform digital campaigns and maintain consistent brand voice.</span></li>
+            <li class="flex gap-3"><span class="text-pink-400 mt-0.5">▸</span><span>Designed festive creatives, static posts, carousel posts, stories, banners & promotional materials using Canva and CorelDRAW.</span></li>
+            <li class="flex gap-3"><span class="text-pink-400 mt-0.5">▸</span><span>Created, edited & published engaging reels and short-form video content to boost audience engagement & brand visibility.</span></li>
+            <li class="flex gap-3"><span class="text-pink-400 mt-0.5">▸</span><span>Developed content concepts, campaign ideas, scripts and brand storytelling aligned with business goals.</span></li>
+            <li class="flex gap-3"><span class="text-pink-400 mt-0.5">▸</span><span>Supported SEO & digital marketing initiatives — analyzed performance & recommended data-driven improvements.</span></li>
+            <li class="flex gap-3"><span class="text-pink-400 mt-0.5">▸</span><span>Conducted competitor research, audience analysis & market trend monitoring.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Experience 2 -->
+      <div class="relative reveal reveal-delay-1">
+        <div class="dot"></div>
+        <div class="glass rounded-3xl p-6 md:p-8 proj-card">
+          <div class="flex flex-wrap items-start justify-between gap-4 mb-4">
+            <div>
+              <span class="text-xs font-semibold px-3 py-1 rounded-full" style="background:rgba(99,102,241,.2); color:#a5b4fc;">LEADERSHIP ROLE</span>
+              <h3 class="text-2xl md:text-3xl font-bold text-white mt-3">Social Media Head</h3>
+              <p class="text-white/70 mt-1">Dona Veda Private Ltd</p>
+            </div>
+            <div class="text-right">
+              <div class="gradient-text font-bold">Jan 2024 — Aug 2024</div>
+              <div class="text-sm text-white/50">8 Months</div>
+            </div>
+          </div>
+          <ul class="space-y-3 text-white/75 text-[15px] leading-relaxed">
+            <li class="flex gap-3"><span class="text-purple-400 mt-0.5">▸</span><span>Managed end-to-end social media operations across Instagram, Facebook, LinkedIn & X (Twitter).</span></li>
+            <li class="flex gap-3"><span class="text-purple-400 mt-0.5">▸</span><span>Planned, scheduled & published content calendars while coordinating with designers, video editors & creators.</span></li>
+            <li class="flex gap-3"><span class="text-purple-400 mt-0.5">▸</span><span>Monitored social media performance, analyzed engagement metrics & generated reports to optimize strategy.</span></li>
+            <li class="flex gap-3"><span class="text-purple-400 mt-0.5">▸</span><span>Implemented ManyChat automation workflows for customer interactions, lead generation & audience nurturing.</span></li>
+            <li class="flex gap-3"><span class="text-purple-400 mt-0.5">▸</span><span>Executed influencer marketing campaigns — research, outreach, collaboration management & performance tracking.</span></li>
+            <li class="flex gap-3"><span class="text-purple-400 mt-0.5">▸</span><span>Managed online communities, responded to customer inquiries & stayed on top of platform trends.</span></li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" class="relative py-24 md:py-32">
+  <div class="max-w-7xl mx-auto px-5 md:px-8">
+    <div class="text-center mb-14 reveal">
+      <span class="text-sm uppercase tracking-[0.3em] text-pink-400 font-semibold">Selected Work</span>
+      <h2 class="text-4xl md:text-6xl font-bold text-white mt-3">Featured <span class="gradient-text">Projects</span></h2>
+      <p class="text-white/60 mt-4 max-w-xl mx-auto">A glimpse into the campaigns, content series & creative assets I've shipped.</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Project 1 -->
+      <div class="proj-card glass rounded-3xl overflow-hidden reveal">
+        <div class="proj-img aspect-[4/5] flex items-center justify-center relative">
+          <div class="relative text-center text-white p-6">
+            <div class="text-6xl mb-3">📸</div>
+            <div class="text-2xl font-bold">Festive Campaign Series</div>
+          </div>
+          <div class="absolute top-4 left-4 glass px-3 py-1.5 rounded-full text-xs font-semibold text-white">Canva • CorelDRAW</div>
+        </div>
+        <div class="p-6">
+          <h3 class="text-xl font-bold text-white">Mirchandani — Festive Creatives</h3>
+          <p class="text-white/65 text-sm mt-2">A collection of festive posts, carousels and stories designed for seasonal campaigns — boosting impressions by 45%.</p>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <span class="pill px-3 py-1 text-xs rounded-full text-white/80">Brand Design</span>
+            <span class="pill px-3 py-1 text-xs rounded-full text-white/80">Social Posts</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 2 -->
+      <div class="proj-card glass rounded-3xl overflow-hidden reveal reveal-delay-1">
+        <div class="proj-img aspect-[4/5] flex items-center justify-center" style="background: linear-gradient(135deg,#a855f7,#6366f1,#1e1b4b);">
+          <div class="relative text-center text-white p-6">
+            <div class="text-6xl mb-3">🎬</div>
+            <div class="text-2xl font-bold">Reels & Video Content</div>
+          </div>
+          <div class="absolute top-4 left-4 glass px-3 py-1.5 rounded-full text-xs font-semibold text-white">After Effects • AI</div>
+        </div>
+        <div class="p-6">
+          <h3 class="text-xl font-bold text-white">Short-Form Video Reel Series</h3>
+          <p class="text-white/65 text-sm mt-2">Concept, script, editing and motion graphics for viral-style reels across multiple platforms.</p>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <span class="pill px-3 py-1 text-xs rounded-full text-white/80">Video Editing</span>
+            <span class="pill px-3 py-1 text-xs rounded-full text-white/80">Storytelling</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 3 -->
+      <div class="proj-card glass rounded-3xl overflow-hidden reveal reveal-delay-2">
+        <div class="proj-img aspect-[4/5] flex items-center justify-center" style="background: linear-gradient(135deg,#ffb86b,#ff3ec9,#a855f7);">
+          <div class="relative text-center text-white p-6">
+            <div class="text-6xl mb-3">🤖</div>
+            <div class="text-2xl font-bold">ManyChat Automation</div>
+          </div>
+          <div class="absolute top-4 left-4 glass px-3 py-1.5 rounded-full text-xs font-semibold text-white">Automation</div>
+        </div>
+        <div class="p-6">
+          <h3 class="text-xl font-bold text-white">Dona Veda — Lead Gen Flow</h3>
+          <p class="text-white/65 text-sm mt-2">Built automated DM workflows on Instagram & Facebook — streamlined customer interactions and generated qualified leads on autopilot.</p>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <span class="pill px-3 py-1 text-xs rounded-full text-white/80">Automation</span>
+            <span class="pill px-3 py-1 text-xs rounded-full text-white/80">Growth</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 4 -->
+      <div class="proj-card glass rounded-3xl overflow-hidden reveal">
+        <div class="proj-img aspect-[4/5] flex items-center justify-center" style="background: linear-gradient(135deg,#6366f1,#06b6d4,#a855f7);">
+          <div class="relative text-center text-white p-6">
+            <div class="text-6xl mb-3">⭐</div>
+            <div class="text-2xl font-bold">Influencer Campaign</div>
+          </div>
+          <div class="absolute top-4 left-4 glass px-3 py-1.5 rounded-full text-xs font-semibold text-white">Strategy</div>
+        </div>
+        <div class="p-6">
+          <h3 class="text-xl font-bold text-white">Multi-Creator Collaboration</h3>
+          <p class="text-white/65 text-sm mt-2">End-to-end influencer campaigns — research, outreach, brief creation, collaboration management & performance tracking.</p>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <span class="pill px-3 py-1 text-xs rounded-full text-white/80">Marketing</span>
+            <span class="pill px-3 py-1 text-xs rounded-full text-white/80">Partnerships</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 5 -->
+      <div class="proj-card glass rounded-3xl overflow-hidden reveal reveal-delay-1">
+        <div class="proj-img aspect-[4/5] flex items-center justify-center" style="background: linear-gradient(135deg,#ff3ec9,#ec4899,#f59e0b);">
+          <div class="relative text-center text-white p-6">
+            <div class="text-6xl mb-3">📅</div>
+            <div class="text-2xl font-bold">Content Calendars</div>
+          </div>
+          <div class="absolute top-4 left-4 glass px-3 py-1.5 rounded-full text-xs font-semibold text-white">Planning</div>
+        </div>
+        <div class="p-6">
+          <h3 class="text-xl font-bold text-white">30-Day Social Blueprint</h3>
+          <p class="text-white/65 text-sm mt-2">Month-long content strategies across IG, FB, LinkedIn & X — designed for consistency, engagement and measurable growth.</p>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <span class="pill px-3 py-1 text-xs rounded-full text-white/80">Strategy</span>
+            <span class="pill px-3 py-1 text-xs rounded-full text-white/80">Planning</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 6 -->
+      <div class="proj-card glass rounded-3xl overflow-hidden reveal reveal-delay-2">
+        <div class="proj-img aspect-[4/5] flex items-center justify-center" style="background: linear-gradient(135deg,#a855f7,#ec4899,#ffb86b);">
+          <div class="relative text-center text-white p-6">
+            <div class="text-6xl mb-3">🧠</div>
+            <div class="text-2xl font-bold">AI Creative Workflow</div>
+          </div>
+          <div class="absolute top-4 left-4 glass px-3 py-1.5 rounded-full text-xs font-semibold text-white">AI Tools</div>
+        </div>
+        <div class="p-6">
+          <h3 class="text-xl font-bold text-white">AI-Powered Content Engine</h3>
+          <p class="text-white/65 text-sm mt-2">Built AI-assisted workflows for ideation, script writing, image generation and first-cut editing — 3× faster output.</p>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <span class="pill px-3 py-1 text-xs rounded-full text-white/80">AI</span>
+            <span class="pill px-3 py-1 text-xs rounded-full text-white/80">Productivity</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="text-center mt-12 reveal">
+      <a href="#contact" class="btn-ghost text-white font-semibold px-7 py-4 rounded-full inline-flex items-center gap-2">
+        Ask for full portfolio →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education" class="relative py-24 md:py-32">
+  <div class="max-w-7xl mx-auto px-5 md:px-8">
+    <div class="text-center mb-14 reveal">
+      <span class="text-sm uppercase tracking-[0.3em] text-pink-400 font-semibold">Academic</span>
+      <h2 class="text-4xl md:text-6xl font-bold text-white mt-3">Education <span class="gradient-text">& Learning</span></h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+      <div class="glass rounded-3xl p-7 proj-card reveal">
+        <div class="text-4xl mb-4">🎓</div>
+        <div class="gradient-text-warm font-bold text-sm">2022</div>
+        <h3 class="text-xl font-bold text-white mt-2">BA in Economics</h3>
+        <p class="text-white/60 mt-1">Siddharth College, Mumbai</p>
+        <div class="mt-5 h-px bg-gradient-to-r from-pink-500/50 to-transparent"></div>
+        <p class="text-sm text-white/50 mt-4">Graduation with a focus on analytical thinking and market dynamics.</p>
+      </div>
+
+      <div class="glass rounded-3xl p-7 proj-card reveal reveal-delay-1">
+        <div class="text-4xl mb-4">📚</div>
+        <div class="gradient-text-warm font-bold text-sm">2018</div>
+        <h3 class="text-xl font-bold text-white mt-2">HSC — Commerce</h3>
+        <p class="text-white/60 mt-1">K.G. Mittal College</p>
+        <div class="mt-5 h-px bg-gradient-to-r from-purple-500/50 to-transparent"></div>
+        <p class="text-sm text-white/50 mt-4">Higher secondary with specialization in business studies.</p>
+      </div>
+
+      <div class="glass rounded-3xl p-7 proj-card reveal reveal-delay-2">
+        <div class="text-4xl mb-4">✏️</div>
+        <div class="gradient-text-warm font-bold text-sm">2016</div>
+        <h3 class="text-xl font-bold text-white mt-2">SSC</h3>
+        <p class="text-white/60 mt-1">V.V.S.S. Vidya Mandir</p>
+        <div class="mt-5 h-px bg-gradient-to-r from-indigo-500/50 to-transparent"></div>
+        <p class="text-sm text-white/50 mt-4">Secondary school certificate — foundational academic journey.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="relative py-24 md:py-32">
+  <div class="max-w-5xl mx-auto px-5 md:px-8">
+    <div class="relative reveal">
+      <div class="absolute -inset-1 rounded-[2.5rem] opacity-50 blur-3xl"
+           style="background: linear-gradient(135deg,#ff3ec9,#a855f7,#6366f1);"></div>
+      <div class="relative glass rounded-[2rem] md:rounded-[2.5rem] p-8 md:p-14 overflow-hidden">
+        <div class="blob" style="width:250px; height:250px; background:#ff3ec9; top:-50px; right:-50px;"></div>
+
+        <div class="relative">
+          <span class="text-sm uppercase tracking-[0.3em] text-pink-400 font-semibold">Contact</span>
+          <h2 class="text-4xl md:text-6xl font-bold text-white mt-3">Let's create something <span class="gradient-text">viral</span> together ✨</h2>
+          <p class="text-white/70 mt-5 text-lg max-w-2xl">Have a brand that needs to grow? A campaign idea bouncing in your head? Let's talk — I reply within 24 hours.</p>
+
+          <div class="mt-10 grid sm:grid-cols-2 gap-4">
+            <a href="mailto:babarpuja2000@gmail.com" class="glass rounded-2xl p-5 flex items-center gap-4 proj-card">
+              <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
+                   style="background: linear-gradient(135deg,#ff3ec9,#a855f7);">📧</div>
+              <div class="min-w-0">
+                <div class="text-xs text-white/50">Email</div>
+                <div class="font-semibold text-white truncate">babarpuja2000@gmail.com</div>
+              </div>
+            </a>
+            <a href="tel:+918355933983" class="glass rounded-2xl p-5 flex items-center gap-4 proj-card">
+              <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
+                   style="background: linear-gradient(135deg,#a855f7,#6366f1);">📱</div>
+              <div>
+                <div class="text-xs text-white/50">Phone</div>
+                <div class="font-semibold text-white">+91 83559 33983</div>
+              </div>
+            </a>
+            <a href="#" class="glass rounded-2xl p-5 flex items-center gap-4 proj-card">
+              <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
+                   style="background: linear-gradient(135deg,#6366f1,#ff3ec9);">💼</div>
+              <div>
+                <div class="text-xs text-white/50">LinkedIn</div>
+                <div class="font-semibold text-white">/in/pooja-babar</div>
+              </div>
+            </a>
+            <a href="#" class="glass rounded-2xl p-5 flex items-center gap-4 proj-card">
+              <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
+                   style="background: linear-gradient(135deg,#ffb86b,#ff3ec9);">📍</div>
+              <div>
+                <div class="text-xs text-white/50">Location</div>
+                <div class="font-semibold text-white">Mumbai, India</div>
+              </div>
+            </a>
+          </div>
+
+          <div class="mt-10 flex flex-wrap gap-4">
+            <a href="mailto:babarpuja2000@gmail.com" class="btn-primary text-white font-semibold px-7 py-4 rounded-full inline-flex items-center gap-2">
+              Send me an email →
+            </a>
+            <a href="tel:+918355933983" class="btn-ghost text-white font-semibold px-7 py-4 rounded-full inline-flex items-center gap-2">
+              📞 Call me
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="relative py-10 border-t border-white/10">
+  <div class="max-w-7xl mx-auto px-5 md:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-lg flex items-center justify-center font-bold text-white text-sm"
+           style="background: linear-gradient(135deg,#ff3ec9,#a855f7);">PB</div>
+      <span class="text-white/70 text-sm">© 2026 Pooja Babar. Designed with 💜 in Mumbai.</span>
+    </div>
+    <div class="flex gap-5 text-sm text-white/60">
+      <a href="#home" class="hover:text-white">Home</a>
+      <a href="#about" class="hover:text-white">About</a>
+      <a href="#projects" class="hover:text-white">Work</a>
+      <a href="#contact" class="hover:text-white">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<!-- JS -->
+<script>
+  // Navbar scroll state
+  const nav = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 30) nav.classList.add('nav-scrolled');
+    else nav.classList.remove('nav-scrolled');
+  });
+
+  // Mobile menu
+  const menuBtn = document.getElementById('menuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  menuBtn?.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+  document.querySelectorAll('.mobile-link').forEach(l => l.addEventListener('click', () => mobileMenu.classList.add('hidden')));
+
+  // Reveal on scroll
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        // If skill-fill inside, animate width
+        e.target.querySelectorAll('.skill-fill').forEach(bar => {
+          bar.style.width = (bar.dataset.width || 80) + '%';
+        });
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+
+  // Counters
+  const counters = document.querySelectorAll('.stat-num');
+  const counterIO = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target;
+      const target = +el.dataset.target;
+      let cur = 0;
+      const step = Math.max(1, Math.floor(target / 60));
+      const iv = setInterval(() => {
+        cur += step;
+        if (cur >= target) { cur = target; clearInterval(iv); }
+        el.textContent = cur + (target >= 100 ? '%' : '+');
+      }, 22);
+      counterIO.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+  counters.forEach(c => counterIO.observe(c));
+
+  // Cursor glow
+  const glow = document.getElementById('cursorGlow');
+  if (glow && window.matchMedia('(pointer:fine)').matches) {
+    window.addEventListener('mousemove', (e) => {
+      glow.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
+    });
+  } else if (glow) {
+    glow.style.display = 'none';
+  }
+</script>
+</body>
+</html>
