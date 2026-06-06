@@ -5,32 +5,33 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Pooja Babar — Social Media Executive & Creative Strategist</title>
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/SplitText.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Instrument+Serif&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#0b0414;
-    --bg-2:#130826;
-    --card:#1a0b33;
     --pink:#ff3ec9;
     --purple:#a855f7;
     --violet:#6366f1;
     --peach:#ffb86b;
     --text:#ece6ff;
-    --muted:#b6a9d8;
   }
   *{ -webkit-font-smoothing: antialiased; }
-  html{ scroll-behavior: smooth; }
-  body{
+  html,body{
     font-family: 'Sora', sans-serif;
     background: var(--bg);
     color: var(--text);
     overflow-x: hidden;
   }
+  /* Lenis-like smooth scroll fallback: keep native but animate */
   h1,h2,h3,h4{ font-family:'Space Grotesk', sans-serif; letter-spacing:-0.02em; }
+  .serif{ font-family:'Instrument Serif', serif; font-style: italic; font-weight: 400; }
 
   /* Animated gradient background */
   .bg-mesh{
-    position: fixed; inset: 0; z-index:-1;
+    position: fixed; inset: 0; z-index:-2;
     background:
       radial-gradient(900px 600px at 10% -10%, rgba(255,62,201,.35), transparent 60%),
       radial-gradient(800px 500px at 95% 10%, rgba(168,85,247,.35), transparent 60%),
@@ -51,17 +52,11 @@
     mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
   }
 
-  /* Floating blobs */
   .blob{
-    position:absolute; border-radius:50%; filter: blur(60px); opacity:.55; pointer-events:none;
-    animation: floatBlob 12s ease-in-out infinite;
-  }
-  @keyframes floatBlob{
-    0%,100%{ transform: translateY(0) translateX(0) scale(1);}
-    50%{ transform: translateY(-30px) translateX(20px) scale(1.08);}
+    position:absolute; border-radius:50%; filter: blur(80px); opacity:.55; pointer-events:none;
+    will-change: transform;
   }
 
-  /* Gradient text */
   .gradient-text{
     background: linear-gradient(90deg,#ff3ec9 0%, #a855f7 50%, #6366f1 100%);
     -webkit-background-clip: text; background-clip:text; color:transparent;
@@ -71,16 +66,15 @@
     -webkit-background-clip: text; background-clip:text; color:transparent;
   }
 
-  /* Glass card */
   .glass{
     background: linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
     border:1px solid rgba(255,255,255,.08);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
+    transition: border-color .4s, transform .4s, box-shadow .4s;
   }
-  .glass:hover{ border-color: rgba(255,62,201,.45); }
+  .glass:hover{ border-color: rgba(255,62,201,.5); }
 
-  /* Glow button */
   .btn-primary{
     position: relative; overflow:hidden;
     background: linear-gradient(90deg,#ff3ec9,#a855f7);
@@ -90,60 +84,24 @@
   .btn-primary:hover{ transform: translateY(-3px); box-shadow: 0 20px 50px -10px rgba(168,85,247,.8);}
   .btn-primary::after{
     content:''; position:absolute; inset:0;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,.3), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
     transform: translateX(-100%); transition: transform .6s;
   }
   .btn-primary:hover::after{ transform: translateX(100%); }
+  .btn-ghost{ border:1px solid rgba(255,255,255,.18); transition: all .3s; }
+  .btn-ghost:hover{ border-color: rgba(255,62,201,.7); background: rgba(255,62,201,.08); transform: translateY(-2px); }
 
-  .btn-ghost{
-    border:1px solid rgba(255,255,255,.18);
-    transition: all .3s;
-  }
-  .btn-ghost:hover{ border-color: rgba(255,62,201,.7); background: rgba(255,62,201,.08); }
-
-  /* Skill bar */
-  .skill-track{
-    background: rgba(255,255,255,.06);
-    border-radius: 999px; overflow:hidden;
-  }
+  .skill-track{ background: rgba(255,255,255,.06); border-radius: 999px; overflow:hidden; }
   .skill-fill{
-    height: 100%;
+    height: 100%; border-radius: 999px;
     background: linear-gradient(90deg,#ff3ec9,#a855f7,#6366f1);
-    border-radius: 999px;
-    width: 0%;
-    transition: width 1.6s cubic-bezier(.2,.8,.2,1);
-    position: relative;
+    width: 0%; position: relative;
   }
   .skill-fill::after{
-    content:''; position:absolute; right:0; top:-2px; width:14px; height:14px; border-radius:50%;
+    content:''; position:absolute; right:0; top:-3px; width:14px; height:14px; border-radius:50%;
     background: #fff; box-shadow: 0 0 15px #ff3ec9, 0 0 25px #a855f7;
   }
 
-  /* Reveal on scroll */
-  .reveal{ opacity:0; transform: translateY(40px); transition: opacity .9s ease, transform .9s cubic-bezier(.2,.8,.2,1); }
-  .reveal.in{ opacity:1; transform: translateY(0); }
-  .reveal-delay-1{ transition-delay: .1s;}
-  .reveal-delay-2{ transition-delay: .2s;}
-  .reveal-delay-3{ transition-delay: .3s;}
-  .reveal-delay-4{ transition-delay: .4s;}
-
-  /* Hero animations */
-  .float-avatar{ animation: floatAvatar 6s ease-in-out infinite; }
-  @keyframes floatAvatar{
-    0%,100%{ transform: translateY(0);}
-    50%{ transform: translateY(-14px);}
-  }
-
-  .marquee{
-    display: flex; gap: 3rem; width: max-content;
-    animation: marquee 28s linear infinite;
-  }
-  @keyframes marquee{
-    from{ transform: translateX(0);}
-    to{ transform: translateX(-50%);}
-  }
-
-  /* Tag pill */
   .pill{
     border:1px solid rgba(255,255,255,.12);
     background: rgba(255,255,255,.04);
@@ -155,7 +113,6 @@
     transform: translateY(-2px);
   }
 
-  /* Timeline */
   .timeline::before{
     content:''; position:absolute; left: 20px; top:0; bottom:0; width:2px;
     background: linear-gradient(180deg, rgba(255,62,201,.8), rgba(99,102,241,.4), transparent);
@@ -166,14 +123,9 @@
     box-shadow: 0 0 20px rgba(255,62,201,.8);
   }
 
-  /* Project card hover */
-  .proj-card{
-    transition: transform .4s cubic-bezier(.2,.8,.2,1), box-shadow .4s;
-  }
-  .proj-card:hover{
-    transform: translateY(-8px) scale(1.01);
-    box-shadow: 0 30px 60px -20px rgba(255,62,201,.35);
-  }
+  .proj-card{ transition: transform .4s cubic-bezier(.2,.8,.2,1), box-shadow .4s; }
+  .proj-card:hover{ transform: translateY(-8px) scale(1.01); box-shadow: 0 30px 60px -20px rgba(255,62,201,.35); }
+
   .proj-img{
     background: linear-gradient(135deg,#ff3ec9,#a855f7,#6366f1);
     position:relative; overflow:hidden;
@@ -185,7 +137,6 @@
   }
   @keyframes spin{ to { transform: rotate(360deg);} }
 
-  /* Nav */
   .nav-scrolled{
     background: rgba(11,4,20,.75);
     border-bottom: 1px solid rgba(255,255,255,.06);
@@ -199,41 +150,81 @@
   }
   .nav-link:hover::after{ transform: scaleX(1); }
 
-  /* Stat count */
   .stat-num{
     background: linear-gradient(180deg,#fff,#ff9fea);
     -webkit-background-clip:text; background-clip:text; color:transparent;
   }
 
-  /* Cursor glow */
   .cursor-glow{
-    position: fixed; width: 400px; height:400px; border-radius:50%;
-    background: radial-gradient(circle, rgba(255,62,201,.15), transparent 60%);
-    pointer-events: none; z-index: 0; transform: translate(-50%,-50%);
-    transition: transform .15s ease-out;
+    position: fixed; width: 500px; height:500px; border-radius:50%;
+    background: radial-gradient(circle, rgba(255,62,201,.18), transparent 60%);
+    pointer-events: none; z-index: 1; transform: translate(-50%,-50%);
     mix-blend-mode: screen;
   }
 
-  /* Scrollbar */
   ::-webkit-scrollbar{ width: 10px;}
   ::-webkit-scrollbar-track{ background: #0b0414;}
   ::-webkit-scrollbar-thumb{ background: linear-gradient(#ff3ec9,#a855f7); border-radius: 10px;}
 
-  /* Mobile */
+  /* Custom preloader */
+  .preloader{
+    position: fixed; inset:0; z-index: 9999;
+    background: #0b0414;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .preloader .inner{
+    text-align:center;
+  }
+  .preloader-bar{
+    width: 220px; height:2px; background: rgba(255,255,255,.1); overflow:hidden; border-radius: 2px;
+    margin-top: 14px;
+  }
+  .preloader-fill{
+    height:100%; width:0%;
+    background: linear-gradient(90deg,#ff3ec9,#a855f7);
+  }
+
+  .float-avatar{ will-change: transform; }
+
+  .hover-tilt{ transition: transform .4s ease; }
+
+  /* Section labels */
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:.6rem;
+    font-size: .72rem; letter-spacing: .32em; text-transform: uppercase;
+    color: #ff9fea; font-weight: 600;
+  }
+  .eyebrow::before{
+    content:''; width: 40px; height:1px; background: linear-gradient(90deg,#ff3ec9,transparent);
+  }
+
+  .link-arrow{ display:inline-flex; align-items:center; gap:.5rem; transition: gap .3s; }
+  .link-arrow:hover{ gap: 1rem; }
+
   @media (max-width: 768px){
     .timeline::before{ left: 12px;}
     .dot{ left: 3px;}
+    .cursor-glow{ display:none; }
   }
 </style>
 </head>
 <body class="relative">
+
+<!-- PRELOADER -->
+<div class="preloader" id="preloader">
+  <div class="inner">
+    <div class="text-4xl md:text-5xl font-extrabold gradient-text" style="font-family:'Space Grotesk';">Pooja.Babar</div>
+    <div class="text-sm text-white/50 mt-2 serif">Loading the magic ✨</div>
+    <div class="preloader-bar mx-auto"><div class="preloader-fill" id="preloaderFill"></div></div>
+  </div>
+</div>
 
 <div class="bg-mesh"></div>
 <div class="grid-lines"></div>
 <div class="cursor-glow" id="cursorGlow"></div>
 
 <!-- NAVIGATION -->
-<nav id="navbar" class="fixed top-0 inset-x-0 z-50 transition-all duration-300">
+<nav id="navbar" class="fixed top-0 inset-x-0 z-50 transition-all duration-500">
   <div class="max-w-7xl mx-auto px-5 md:px-8 py-4 flex items-center justify-between">
     <a href="#home" class="flex items-center gap-2 group">
       <div class="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-white"
@@ -243,7 +234,7 @@
       <span class="font-semibold tracking-tight text-white/90 group-hover:text-white">Pooja.Babar</span>
     </a>
 
-    <div class="hidden md:flex items-center gap-8 text-sm text-white/80">
+    <div class="hidden md:flex items-center gap-8 text-sm text-white/80" id="navLinks">
       <a href="#about" class="nav-link hover:text-white">About</a>
       <a href="#skills" class="nav-link hover:text-white">Skills</a>
       <a href="#experience" class="nav-link hover:text-white">Experience</a>
@@ -270,191 +261,151 @@
 </nav>
 
 <!-- HERO -->
-<section id="home" class="relative pt-32 md:pt-40 pb-20 md:pb-28 overflow-hidden">
-  <div class="blob" style="width:400px; height:400px; background:#ff3ec9; top:10%; left:-5%;"></div>
-  <div class="blob" style="width:450px; height:450px; background:#6366f1; top:30%; right:-8%; animation-delay:-4s;"></div>
+<section id="home" class="relative min-h-screen flex items-center pt-28 pb-16 overflow-hidden">
+  <div class="blob" style="width:500px; height:500px; background:#ff3ec9; top:5%; left:-10%;"></div>
+  <div class="blob" style="width:550px; height:550px; background:#6366f1; top:20%; right:-10%;"></div>
+  <div class="blob" style="width:400px; height:400px; background:#a855f7; bottom:-10%; left:30%;"></div>
 
-  <div class="max-w-7xl mx-auto px-5 md:px-8 grid lg:grid-cols-12 gap-10 items-center relative">
-    <div class="lg:col-span-7">
-      <div class="inline-flex items-center gap-2 glass px-4 py-2 rounded-full text-sm text-white/85 mb-6 reveal">
-        <span class="relative flex h-2 w-2">
-          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-400 opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-2 w-2 bg-pink-500"></span>
-        </span>
-        Available for freelance & full-time roles
+  <div class="max-w-7xl mx-auto px-5 md:px-8 w-full relative">
+    <div class="text-sm text-white/60 mb-6 flex items-center gap-3 reveal-text">
+      <span class="relative flex h-2 w-2">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2 w-2 bg-pink-500"></span>
+      </span>
+      Available for freelance & full-time roles
+    </div>
+
+    <h1 class="hero-title text-[14vw] md:text-[10vw] lg:text-[9rem] leading-[0.95] font-extrabold text-white">
+      <span class="block overflow-hidden"><span class="inline-block" style="will-change: transform, opacity;">Pooja</span></span>
+      <span class="block overflow-hidden"><span class="inline-block gradient-text" style="will-change: transform, opacity;">Babar.</span></span>
+    </h1>
+
+    <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mt-10">
+      <div class="max-w-2xl">
+        <h2 class="text-2xl md:text-4xl font-semibold text-white reveal-text">
+          <span class="serif gradient-text-warm">Social Media Executive</span> & Creative Strategist crafting brands that scroll-stopp.
+        </h2>
+        <p class="text-white/65 mt-5 text-lg leading-relaxed reveal-text">
+          I build digital presence from scratch — content, campaigns, reels & automation. Based in Mumbai, working with brands worldwide.
+        </p>
+
+        <div class="mt-8 flex flex-wrap gap-4 reveal-text">
+          <a href="#contact" class="btn-primary text-white font-semibold px-7 py-4 rounded-full inline-flex items-center gap-2">
+            Let's Work Together <span>→</span>
+          </a>
+          <a href="#projects" class="btn-ghost text-white font-semibold px-7 py-4 rounded-full inline-flex items-center gap-2">
+            View My Work
+          </a>
+        </div>
       </div>
 
-      <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-[84px] leading-[1.02] font-extrabold text-white reveal reveal-delay-1">
-        Hey, I'm <span class="gradient-text">Pooja Babar</span>
-      </h1>
-
-      <h2 class="mt-5 text-2xl md:text-3xl font-semibold text-white/90 reveal reveal-delay-2">
-        Social Media Executive <span class="text-white/40">•</span> <span class="gradient-text-warm">Creative Strategist</span>
-      </h2>
-
-      <p class="mt-6 text-lg text-white/70 max-w-2xl leading-relaxed reveal reveal-delay-3">
-        I turn ideas into scroll-stopping content. Building brands, boosting engagement, and crafting stories that connect — across Instagram, LinkedIn, Facebook & X.
-      </p>
-
-      <div class="mt-8 flex flex-wrap gap-4 reveal reveal-delay-4">
-        <a href="#contact" class="btn-primary text-white font-semibold px-7 py-4 rounded-full inline-flex items-center gap-2">
-          Let's Work Together
-          <span>→</span>
-        </a>
-        <a href="#projects" class="btn-ghost text-white font-semibold px-7 py-4 rounded-full inline-flex items-center gap-2">
-          View My Work
-        </a>
-      </div>
-
-      <!-- Mini stats -->
-      <div class="mt-12 grid grid-cols-3 gap-4 max-w-xl reveal reveal-delay-4">
-        <div>
-          <div class="stat-num text-3xl md:text-4xl font-extrabold" data-target="2">0</div>
-          <div class="text-sm text-white/60 mt-1">Years Experience</div>
+      <!-- Hero stats -->
+      <div class="grid grid-cols-3 md:grid-cols-1 gap-6 md:gap-5 md:w-64">
+        <div class="stat-card glass rounded-2xl p-5 text-center md:text-left">
+          <div class="text-xs text-white/50 uppercase tracking-wider">Years</div>
+          <div class="stat-num text-5xl font-extrabold mt-1"><span class="counter" data-target="2">0</span>+</div>
         </div>
-        <div>
-          <div class="stat-num text-3xl md:text-4xl font-extrabold" data-target="50">0</div>
-          <div class="text-sm text-white/60 mt-1">Campaigns Shipped</div>
+        <div class="stat-card glass rounded-2xl p-5 text-center md:text-left">
+          <div class="text-xs text-white/50 uppercase tracking-wider">Campaigns</div>
+          <div class="stat-num text-5xl font-extrabold mt-1"><span class="counter" data-target="50">0</span>+</div>
         </div>
-        <div>
-          <div class="stat-num text-3xl md:text-4xl font-extrabold" data-target="100">0</div>
-          <div class="text-sm text-white/60 mt-1">% Brand Growth</div>
+        <div class="stat-card glass rounded-2xl p-5 text-center md:text-left">
+          <div class="text-xs text-white/50 uppercase tracking-wider">Engagement</div>
+          <div class="stat-num text-5xl font-extrabold mt-1"><span class="counter" data-target="45">0</span>K</div>
         </div>
       </div>
     </div>
 
-    <!-- Avatar card -->
-    <div class="lg:col-span-5 reveal reveal-delay-2">
-      <div class="relative float-avatar mx-auto max-w-md">
-        <div class="absolute -inset-4 rounded-[2rem] opacity-60 blur-2xl"
-             style="background: conic-gradient(from 180deg,#ff3ec9,#a855f7,#6366f1,#ff3ec9);"></div>
-        <div class="relative glass rounded-[2rem] p-6 md:p-8">
-          <div class="flex items-center justify-between mb-5">
-            <div class="flex gap-1.5">
-              <span class="w-3 h-3 rounded-full bg-pink-500"></span>
-              <span class="w-3 h-3 rounded-full bg-purple-400"></span>
-              <span class="w-3 h-3 rounded-full bg-indigo-400"></span>
-            </div>
-            <span class="text-xs text-white/50">@pooja.creates</span>
-          </div>
-
-          <div class="relative rounded-3xl overflow-hidden aspect-[4/5] proj-img flex items-center justify-center">
-            <div class="text-[180px] font-black text-white/90 drop-shadow-2xl" style="font-family:'Space Grotesk';">PB</div>
-            <div class="absolute top-4 left-4 glass px-3 py-1.5 rounded-full text-xs text-white font-medium">✨ Social Pro</div>
-            <div class="absolute bottom-4 right-4 glass px-3 py-1.5 rounded-full text-xs text-white font-medium">📍 Mumbai, IN</div>
-          </div>
-
-          <div class="mt-5 flex items-center justify-between">
-            <div>
-              <div class="font-semibold text-white">Pooja Babar</div>
-              <div class="text-sm text-white/60">Content • Design • Strategy</div>
-            </div>
-            <button class="btn-primary text-white text-sm font-semibold px-4 py-2 rounded-full">Follow +</button>
-          </div>
-
-          <div class="mt-5 grid grid-cols-3 gap-2 text-center">
-            <div class="glass rounded-xl py-3">
-              <div class="text-lg font-bold gradient-text">120+</div>
-              <div class="text-[11px] text-white/60">Posts</div>
-            </div>
-            <div class="glass rounded-xl py-3">
-              <div class="text-lg font-bold gradient-text">45K</div>
-              <div class="text-[11px] text-white/60">Reach</div>
-            </div>
-            <div class="glass rounded-xl py-3">
-              <div class="text-lg font-bold gradient-text">8</div>
-              <div class="text-[11px] text-white/60">Tools</div>
-            </div>
-          </div>
-        </div>
+    <!-- Scroll indicator -->
+    <div class="mt-16 flex items-center justify-between text-white/40 text-sm reveal-text">
+      <div class="flex items-center gap-2">
+        <span class="serif">scroll to explore</span>
       </div>
-    </div>
-  </div>
-
-  <!-- Marquee -->
-  <div class="mt-20 overflow-hidden border-y border-white/10 py-5 bg-white/[0.02]">
-    <div class="marquee text-2xl md:text-3xl font-semibold text-white/70 whitespace-nowrap">
-      <span>Content Strategy ✦</span><span> Reels & Video Editing ✦</span><span> Canva Design ✦</span><span> Influencer Marketing ✦</span><span> Brand Storytelling ✦</span><span> Automation ✦</span><span> SEO & Analytics ✦</span><span> Social Media Management ✦</span>
-      <span>Content Strategy ✦</span><span> Reels & Video Editing ✦</span><span> Canva Design ✦</span><span> Influencer Marketing ✦</span><span> Brand Storytelling ✦</span><span> Automation ✦</span><span> SEO & Analytics ✦</span><span> Social Media Management ✦</span>
+      <div class="h-10 w-[1px] bg-gradient-to-b from-white/40 to-transparent"></div>
     </div>
   </div>
 </section>
 
+<!-- Marquee -->
+<div class="overflow-hidden border-y border-white/10 py-6 bg-white/[0.02]">
+  <div class="marquee-track text-3xl md:text-5xl font-semibold text-white/80 whitespace-nowrap flex gap-12" style="width: max-content;">
+    <span>✨ Content Strategy</span><span class="serif gradient-text-warm">•</span>
+    <span>🎬 Reels & Video Editing</span><span class="serif gradient-text-warm">•</span>
+    <span>🎨 Canva Design</span><span class="serif gradient-text-warm">•</span>
+    <span>⭐ Influencer Marketing</span><span class="serif gradient-text-warm">•</span>
+    <span>📖 Brand Storytelling</span><span class="serif gradient-text-warm">•</span>
+    <span>🤖 Automation</span><span class="serif gradient-text-warm">•</span>
+    <span>📊 SEO & Analytics</span><span class="serif gradient-text-warm">•</span>
+    <!-- duplicate for loop -->
+    <span>✨ Content Strategy</span><span class="serif gradient-text-warm">•</span>
+    <span>🎬 Reels & Video Editing</span><span class="serif gradient-text-warm">•</span>
+    <span>🎨 Canva Design</span><span class="serif gradient-text-warm">•</span>
+    <span>⭐ Influencer Marketing</span><span class="serif gradient-text-warm">•</span>
+    <span>📖 Brand Storytelling</span><span class="serif gradient-text-warm">•</span>
+    <span>🤖 Automation</span><span class="serif gradient-text-warm">•</span>
+    <span>📊 SEO & Analytics</span><span class="serif gradient-text-warm">•</span>
+  </div>
+</div>
+
 <!-- ABOUT -->
-<section id="about" class="relative py-24 md:py-32">
+<section id="about" class="relative py-28 md:py-36">
   <div class="max-w-7xl mx-auto px-5 md:px-8">
-    <div class="text-center mb-14 reveal">
-      <span class="text-sm uppercase tracking-[0.3em] text-pink-400 font-semibold">About Me</span>
-      <h2 class="text-4xl md:text-6xl font-bold text-white mt-3">The girl behind the feed 📱</h2>
+    <div class="flex items-center justify-between mb-10">
+      <span class="eyebrow reveal-text">About Me</span>
+      <span class="text-white/30 text-sm serif hidden md:block">(01)</span>
     </div>
 
-    <div class="grid md:grid-cols-12 gap-8 items-start">
-      <div class="md:col-span-7 reveal">
-        <div class="glass rounded-3xl p-8 md:p-10">
-          <p class="text-lg text-white/80 leading-relaxed">
-            I'm a <span class="gradient-text-warm font-semibold">Social Media & Digital Marketing Professional</span> based in Mumbai with 2+ years of experience building brands that people actually love to follow.
-          </p>
-          <p class="text-lg text-white/70 leading-relaxed mt-5">
-            From planning month-long content calendars to editing reels that trend, I love every part of the creative process. I've managed multi-platform campaigns for brands across Instagram, Facebook, LinkedIn & X — driving real growth through strategy, design and storytelling.
-          </p>
-          <p class="text-lg text-white/70 leading-relaxed mt-5">
-            When I'm not scheduling posts, I'm experimenting with AI tools, exploring new design trends, and obsessing over analytics dashboards.
-          </p>
+    <div class="grid md:grid-cols-12 gap-10 items-start">
+      <div class="md:col-span-7">
+        <h2 class="text-4xl md:text-6xl font-bold text-white leading-tight big-text">
+          The girl behind the feed — <span class="gradient-text">turning ideas</span> into scroll-stopping content.
+        </h2>
+      </div>
+      <div class="md:col-span-5 md:pt-6">
+        <p class="text-white/70 text-lg leading-relaxed reveal-text">
+          I'm a Social Media & Digital Marketing Professional based in Mumbai with 2+ years of experience building brands people love to follow.
+        </p>
+        <p class="text-white/60 text-lg leading-relaxed mt-5 reveal-text">
+          From planning month-long content calendars to editing reels that trend, I love every part of the creative process — managing multi-platform campaigns across Instagram, Facebook, LinkedIn & X.
+        </p>
+      </div>
+    </div>
 
-          <div class="mt-8 flex flex-wrap gap-3">
-            <span class="pill px-4 py-2 rounded-full text-sm text-white/90">🎯 Content Strategy</span>
-            <span class="pill px-4 py-2 rounded-full text-sm text-white/90">🎨 Visual Design</span>
-            <span class="pill px-4 py-2 rounded-full text-sm text-white/90">📊 Analytics</span>
-            <span class="pill px-4 py-2 rounded-full text-sm text-white/90">🤖 AI Workflows</span>
-            <span class="pill px-4 py-2 rounded-full text-sm text-white/90">🎬 Video Editing</span>
-            <span class="pill px-4 py-2 rounded-full text-sm text-white/90">📣 Campaigns</span>
-          </div>
+    <div class="grid md:grid-cols-12 gap-6 mt-16">
+      <div class="md:col-span-7 glass rounded-3xl p-8 md:p-10 reveal-card">
+        <p class="text-white/80 text-lg leading-relaxed">
+          When I'm not scheduling posts, I'm <span class="gradient-text-warm font-semibold">experimenting with AI tools</span>, exploring new design trends, and obsessing over analytics dashboards. My mission: help brands tell stories that convert curiosity into community.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <span class="pill px-4 py-2 rounded-full text-sm text-white/90">🎯 Content Strategy</span>
+          <span class="pill px-4 py-2 rounded-full text-sm text-white/90">🎨 Visual Design</span>
+          <span class="pill px-4 py-2 rounded-full text-sm text-white/90">📊 Analytics</span>
+          <span class="pill px-4 py-2 rounded-full text-sm text-white/90">🤖 AI Workflows</span>
+          <span class="pill px-4 py-2 rounded-full text-sm text-white/90">🎬 Video Editing</span>
+          <span class="pill px-4 py-2 rounded-full text-sm text-white/90">📣 Campaigns</span>
         </div>
       </div>
 
-      <div class="md:col-span-5 reveal reveal-delay-2 space-y-5">
-        <div class="glass rounded-3xl p-6 proj-card">
-          <div class="flex items-center gap-4">
-            <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl"
-                 style="background: linear-gradient(135deg,#ff3ec9,#a855f7);">📍</div>
-            <div>
-              <div class="text-sm text-white/50">Based in</div>
-              <div class="text-lg font-semibold text-white">Mumbai, India</div>
-            </div>
-          </div>
+      <div class="md:col-span-5 grid grid-cols-2 gap-4">
+        <div class="glass rounded-3xl p-6 proj-card reveal-card">
+          <div class="text-3xl">📍</div>
+          <div class="text-sm text-white/50 mt-3">Based in</div>
+          <div class="text-lg font-semibold text-white mt-1">Mumbai, India</div>
         </div>
-
-        <div class="glass rounded-3xl p-6 proj-card">
-          <div class="flex items-center gap-4">
-            <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl"
-                 style="background: linear-gradient(135deg,#a855f7,#6366f1);">💼</div>
-            <div>
-              <div class="text-sm text-white/50">Experience</div>
-              <div class="text-lg font-semibold text-white">2+ Years • 2 Brands Led</div>
-            </div>
-          </div>
+        <div class="glass rounded-3xl p-6 proj-card reveal-card">
+          <div class="text-3xl">💼</div>
+          <div class="text-sm text-white/50 mt-3">Experience</div>
+          <div class="text-lg font-semibold text-white mt-1">2+ Years</div>
         </div>
-
-        <div class="glass rounded-3xl p-6 proj-card">
-          <div class="flex items-center gap-4">
-            <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl"
-                 style="background: linear-gradient(135deg,#6366f1,#ff3ec9);">💬</div>
-            <div>
-              <div class="text-sm text-white/50">Languages</div>
-              <div class="text-lg font-semibold text-white">English • Hindi • Marathi</div>
-            </div>
-          </div>
+        <div class="glass rounded-3xl p-6 proj-card reveal-card">
+          <div class="text-3xl">💬</div>
+          <div class="text-sm text-white/50 mt-3">Languages</div>
+          <div class="text-lg font-semibold text-white mt-1">EN • HI • MR</div>
         </div>
-
-        <div class="glass rounded-3xl p-6 proj-card">
-          <div class="flex items-center gap-4">
-            <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl"
-                 style="background: linear-gradient(135deg,#ffb86b,#ff3ec9);">🚀</div>
-            <div>
-              <div class="text-sm text-white/50">Currently</div>
-              <div class="text-lg font-semibold text-white">Open to new opportunities</div>
-            </div>
-          </div>
+        <div class="glass rounded-3xl p-6 proj-card reveal-card">
+          <div class="text-3xl">🚀</div>
+          <div class="text-sm text-white/50 mt-3">Currently</div>
+          <div class="text-lg font-semibold text-white mt-1">Open to work</div>
         </div>
       </div>
     </div>
@@ -462,71 +413,73 @@
 </section>
 
 <!-- SKILLS -->
-<section id="skills" class="relative py-24 md:py-32">
+<section id="skills" class="relative py-28 md:py-36">
   <div class="max-w-7xl mx-auto px-5 md:px-8">
-    <div class="text-center mb-14 reveal">
-      <span class="text-sm uppercase tracking-[0.3em] text-pink-400 font-semibold">Superpowers</span>
-      <h2 class="text-4xl md:text-6xl font-bold text-white mt-3">Tools & Skills <span class="gradient-text">I master</span></h2>
-      <p class="text-white/60 mt-4 max-w-xl mx-auto">From design to automation — here's my daily toolbox for creating magic on the internet.</p>
+    <div class="flex items-center justify-between mb-10">
+      <span class="eyebrow reveal-text">Superpowers</span>
+      <span class="text-white/30 text-sm serif hidden md:block">(02)</span>
     </div>
 
-    <!-- Skill cards -->
-    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-5 mb-14">
-      <!-- Cards -->
-      <div class="glass rounded-2xl p-6 proj-card reveal">
-        <div class="text-3xl mb-3">🎨</div>
-        <h3 class="text-lg font-bold text-white">Canva</h3>
-        <p class="text-sm text-white/60 mt-1">Social posts, carousels, stories</p>
-        <div class="skill-track mt-5 h-2"><div class="skill-fill" data-width="95"></div></div>
+    <h2 class="text-4xl md:text-6xl font-bold text-white leading-tight max-w-4xl big-text">
+      Tools & skills <span class="gradient-text">I master</span> daily.
+    </h2>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-5 mt-14">
+      <!-- skill cards -->
+      <div class="glass rounded-3xl p-7 proj-card reveal-card">
+        <div class="flex items-center justify-between"><div class="text-4xl">🎨</div><span class="text-xs text-white/40">Canva</span></div>
+        <h3 class="text-xl font-bold text-white mt-6">Canva Pro</h3>
+        <p class="text-white/55 text-sm mt-2">Posts, carousels & stories</p>
+        <div class="skill-track mt-6 h-2"><div class="skill-fill" data-width="95"></div></div>
         <div class="text-xs text-white/50 mt-2 text-right">95%</div>
       </div>
-      <div class="glass rounded-2xl p-6 proj-card reveal reveal-delay-1">
-        <div class="text-3xl mb-3">✨</div>
-        <h3 class="text-lg font-bold text-white">Adobe Illustrator</h3>
-        <p class="text-sm text-white/60 mt-1">Vector art & brand graphics</p>
-        <div class="skill-track mt-5 h-2"><div class="skill-fill" data-width="82"></div></div>
+      <div class="glass rounded-3xl p-7 proj-card reveal-card">
+        <div class="flex items-center justify-between"><div class="text-4xl">✨</div><span class="text-xs text-white/40">Adobe</span></div>
+        <h3 class="text-xl font-bold text-white mt-6">Illustrator</h3>
+        <p class="text-white/55 text-sm mt-2">Vector & brand graphics</p>
+        <div class="skill-track mt-6 h-2"><div class="skill-fill" data-width="82"></div></div>
         <div class="text-xs text-white/50 mt-2 text-right">82%</div>
       </div>
-      <div class="glass rounded-2xl p-6 proj-card reveal reveal-delay-2">
-        <div class="text-3xl mb-3">🎬</div>
-        <h3 class="text-lg font-bold text-white">Adobe After Effects</h3>
-        <p class="text-sm text-white/60 mt-1">Motion graphics & animations</p>
-        <div class="skill-track mt-5 h-2"><div class="skill-fill" data-width="78"></div></div>
+      <div class="glass rounded-3xl p-7 proj-card reveal-card">
+        <div class="flex items-center justify-between"><div class="text-4xl">🎬</div><span class="text-xs text-white/40">Adobe</span></div>
+        <h3 class="text-xl font-bold text-white mt-6">After Effects</h3>
+        <p class="text-white/55 text-sm mt-2">Motion graphics & reels</p>
+        <div class="skill-track mt-6 h-2"><div class="skill-fill" data-width="78"></div></div>
         <div class="text-xs text-white/50 mt-2 text-right">78%</div>
       </div>
-      <div class="glass rounded-2xl p-6 proj-card reveal reveal-delay-3">
-        <div class="text-3xl mb-3">🖌️</div>
-        <h3 class="text-lg font-bold text-white">CorelDRAW</h3>
-        <p class="text-sm text-white/60 mt-1">Print & vector layouts</p>
-        <div class="skill-track mt-5 h-2"><div class="skill-fill" data-width="88"></div></div>
+      <div class="glass rounded-3xl p-7 proj-card reveal-card">
+        <div class="flex items-center justify-between"><div class="text-4xl">🖌️</div><span class="text-xs text-white/40">Corel</span></div>
+        <h3 class="text-xl font-bold text-white mt-6">CorelDRAW</h3>
+        <p class="text-white/55 text-sm mt-2">Print & vector layouts</p>
+        <div class="skill-track mt-6 h-2"><div class="skill-fill" data-width="88"></div></div>
         <div class="text-xs text-white/50 mt-2 text-right">88%</div>
       </div>
-      <div class="glass rounded-2xl p-6 proj-card reveal">
-        <div class="text-3xl mb-3">🤖</div>
-        <h3 class="text-lg font-bold text-white">Automation Tools</h3>
-        <p class="text-sm text-white/60 mt-1">ManyChat, scheduling & workflows</p>
-        <div class="skill-track mt-5 h-2"><div class="skill-fill" data-width="90"></div></div>
+      <div class="glass rounded-3xl p-7 proj-card reveal-card">
+        <div class="flex items-center justify-between"><div class="text-4xl">🤖</div><span class="text-xs text-white/40">Automation</span></div>
+        <h3 class="text-xl font-bold text-white mt-6">Automation Tools</h3>
+        <p class="text-white/55 text-sm mt-2">ManyChat & workflows</p>
+        <div class="skill-track mt-6 h-2"><div class="skill-fill" data-width="90"></div></div>
         <div class="text-xs text-white/50 mt-2 text-right">90%</div>
       </div>
-      <div class="glass rounded-2xl p-6 proj-card reveal reveal-delay-1">
-        <div class="text-3xl mb-3">🧠</div>
-        <h3 class="text-lg font-bold text-white">AI Tools</h3>
-        <p class="text-sm text-white/60 mt-1">ChatGPT, Midjourney, AI workflows</p>
-        <div class="skill-track mt-5 h-2"><div class="skill-fill" data-width="92"></div></div>
+      <div class="glass rounded-3xl p-7 proj-card reveal-card">
+        <div class="flex items-center justify-between"><div class="text-4xl">🧠</div><span class="text-xs text-white/40">AI</span></div>
+        <h3 class="text-xl font-bold text-white mt-6">AI Tools</h3>
+        <p class="text-white/55 text-sm mt-2">ChatGPT, Midjourney & more</p>
+        <div class="skill-track mt-6 h-2"><div class="skill-fill" data-width="92"></div></div>
         <div class="text-xs text-white/50 mt-2 text-right">92%</div>
       </div>
-      <div class="glass rounded-2xl p-6 proj-card reveal reveal-delay-2">
-        <div class="text-3xl mb-3">📹</div>
-        <h3 class="text-lg font-bold text-white">Video Editing</h3>
-        <p class="text-sm text-white/60 mt-1">Reels, short-form & storytelling</p>
-        <div class="skill-track mt-5 h-2"><div class="skill-fill" data-width="85"></div></div>
+      <div class="glass rounded-3xl p-7 proj-card reveal-card">
+        <div class="flex items-center justify-between"><div class="text-4xl">📹</div><span class="text-xs text-white/40">Video</span></div>
+        <h3 class="text-xl font-bold text-white mt-6">Video Editing</h3>
+        <p class="text-white/55 text-sm mt-2">Reels & short-form</p>
+        <div class="skill-track mt-6 h-2"><div class="skill-fill" data-width="85"></div></div>
         <div class="text-xs text-white/50 mt-2 text-right">85%</div>
       </div>
-      <div class="glass rounded-2xl p-6 proj-card reveal reveal-delay-3">
-        <div class="text-3xl mb-3">📊</div>
-        <h3 class="text-lg font-bold text-white">Strategy & Analytics</h3>
-        <p class="text-sm text-white/60 mt-1">Content calendars & SEO</p>
-        <div class="skill-track mt-5 h-2"><div class="skill-fill" data-width="88"></div></div>
+      <div class="glass rounded-3xl p-7 proj-card reveal-card">
+        <div class="flex items-center justify-between"><div class="text-4xl">📊</div><span class="text-xs text-white/40">Strategy</span></div>
+        <h3 class="text-xl font-bold text-white mt-6">Strategy & SEO</h3>
+        <p class="text-white/55 text-sm mt-2">Analytics & growth</p>
+        <div class="skill-track mt-6 h-2"><div class="skill-fill" data-width="88"></div></div>
         <div class="text-xs text-white/50 mt-2 text-right">88%</div>
       </div>
     </div>
@@ -534,25 +487,27 @@
 </section>
 
 <!-- EXPERIENCE -->
-<section id="experience" class="relative py-24 md:py-32">
+<section id="experience" class="relative py-28 md:py-36">
   <div class="max-w-7xl mx-auto px-5 md:px-8">
-    <div class="text-center mb-14 reveal">
-      <span class="text-sm uppercase tracking-[0.3em] text-pink-400 font-semibold">Journey</span>
-      <h2 class="text-4xl md:text-6xl font-bold text-white mt-3">Work <span class="gradient-text">Experience</span></h2>
-      <p class="text-white/60 mt-4 max-w-xl mx-auto">Two years of shipping campaigns, leading teams and growing brands.</p>
+    <div class="flex items-center justify-between mb-10">
+      <span class="eyebrow reveal-text">Journey</span>
+      <span class="text-white/30 text-sm serif hidden md:block">(03)</span>
     </div>
 
-    <div class="relative timeline pl-14 md:pl-20 max-w-5xl mx-auto space-y-10">
+    <h2 class="text-4xl md:text-6xl font-bold text-white leading-tight max-w-4xl big-text">
+      Experience that <span class="gradient-text">built brands</span>.
+    </h2>
 
-      <!-- Experience 1 -->
-      <div class="relative reveal">
+    <div class="relative timeline pl-14 md:pl-20 max-w-5xl mx-auto space-y-10 mt-14">
+
+      <div class="relative reveal-card">
         <div class="dot"></div>
         <div class="glass rounded-3xl p-6 md:p-8 proj-card">
           <div class="flex flex-wrap items-start justify-between gap-4 mb-4">
             <div>
               <span class="text-xs font-semibold px-3 py-1 rounded-full" style="background:rgba(255,62,201,.15); color:#ff9fea;">CURRENT ROLE</span>
               <h3 class="text-2xl md:text-3xl font-bold text-white mt-3">Social Media Executive</h3>
-              <p class="text-white/70 mt-1">Mirchandani Group</p>
+              <p class="text-white/70 mt-1 serif">Mirchandani Group</p>
             </div>
             <div class="text-right">
               <div class="gradient-text-warm font-bold">Oct 2024 — Present</div>
@@ -560,25 +515,24 @@
             </div>
           </div>
           <ul class="space-y-3 text-white/75 text-[15px] leading-relaxed">
-            <li class="flex gap-3"><span class="text-pink-400 mt-0.5">▸</span><span>Coordinated with external marketing agencies to execute multi-platform digital campaigns and maintain consistent brand voice.</span></li>
-            <li class="flex gap-3"><span class="text-pink-400 mt-0.5">▸</span><span>Designed festive creatives, static posts, carousel posts, stories, banners & promotional materials using Canva and CorelDRAW.</span></li>
-            <li class="flex gap-3"><span class="text-pink-400 mt-0.5">▸</span><span>Created, edited & published engaging reels and short-form video content to boost audience engagement & brand visibility.</span></li>
-            <li class="flex gap-3"><span class="text-pink-400 mt-0.5">▸</span><span>Developed content concepts, campaign ideas, scripts and brand storytelling aligned with business goals.</span></li>
-            <li class="flex gap-3"><span class="text-pink-400 mt-0.5">▸</span><span>Supported SEO & digital marketing initiatives — analyzed performance & recommended data-driven improvements.</span></li>
+            <li class="flex gap-3"><span class="text-pink-400 mt-0.5">▸</span><span>Coordinated with external agencies to execute multi-platform campaigns with consistent brand voice.</span></li>
+            <li class="flex gap-3"><span class="text-pink-400 mt-0.5">▸</span><span>Designed festive creatives, static posts, carousels, stories & banners in Canva & CorelDRAW.</span></li>
+            <li class="flex gap-3"><span class="text-pink-400 mt-0.5">▸</span><span>Created, edited & published reels and short-form videos — boosting engagement & visibility.</span></li>
+            <li class="flex gap-3"><span class="text-pink-400 mt-0.5">▸</span><span>Developed content concepts, scripts and brand storytelling aligned with business objectives.</span></li>
+            <li class="flex gap-3"><span class="text-pink-400 mt-0.5">▸</span><span>Supported SEO initiatives — analyzed performance & recommended data-driven improvements.</span></li>
             <li class="flex gap-3"><span class="text-pink-400 mt-0.5">▸</span><span>Conducted competitor research, audience analysis & market trend monitoring.</span></li>
           </ul>
         </div>
       </div>
 
-      <!-- Experience 2 -->
-      <div class="relative reveal reveal-delay-1">
+      <div class="relative reveal-card">
         <div class="dot"></div>
         <div class="glass rounded-3xl p-6 md:p-8 proj-card">
           <div class="flex flex-wrap items-start justify-between gap-4 mb-4">
             <div>
               <span class="text-xs font-semibold px-3 py-1 rounded-full" style="background:rgba(99,102,241,.2); color:#a5b4fc;">LEADERSHIP ROLE</span>
               <h3 class="text-2xl md:text-3xl font-bold text-white mt-3">Social Media Head</h3>
-              <p class="text-white/70 mt-1">Dona Veda Private Ltd</p>
+              <p class="text-white/70 mt-1 serif">Dona Veda Private Ltd</p>
             </div>
             <div class="text-right">
               <div class="gradient-text font-bold">Jan 2024 — Aug 2024</div>
@@ -586,12 +540,12 @@
             </div>
           </div>
           <ul class="space-y-3 text-white/75 text-[15px] leading-relaxed">
-            <li class="flex gap-3"><span class="text-purple-400 mt-0.5">▸</span><span>Managed end-to-end social media operations across Instagram, Facebook, LinkedIn & X (Twitter).</span></li>
-            <li class="flex gap-3"><span class="text-purple-400 mt-0.5">▸</span><span>Planned, scheduled & published content calendars while coordinating with designers, video editors & creators.</span></li>
-            <li class="flex gap-3"><span class="text-purple-400 mt-0.5">▸</span><span>Monitored social media performance, analyzed engagement metrics & generated reports to optimize strategy.</span></li>
-            <li class="flex gap-3"><span class="text-purple-400 mt-0.5">▸</span><span>Implemented ManyChat automation workflows for customer interactions, lead generation & audience nurturing.</span></li>
-            <li class="flex gap-3"><span class="text-purple-400 mt-0.5">▸</span><span>Executed influencer marketing campaigns — research, outreach, collaboration management & performance tracking.</span></li>
-            <li class="flex gap-3"><span class="text-purple-400 mt-0.5">▸</span><span>Managed online communities, responded to customer inquiries & stayed on top of platform trends.</span></li>
+            <li class="flex gap-3"><span class="text-purple-400 mt-0.5">▸</span><span>Owned end-to-end social media operations across Instagram, Facebook, LinkedIn & X (Twitter).</span></li>
+            <li class="flex gap-3"><span class="text-purple-400 mt-0.5">▸</span><span>Planned, scheduled & published content calendars coordinating designers, editors & creators.</span></li>
+            <li class="flex gap-3"><span class="text-purple-400 mt-0.5">▸</span><span>Monitored performance, analyzed engagement metrics & generated reports to optimize strategy.</span></li>
+            <li class="flex gap-3"><span class="text-purple-400 mt-0.5">▸</span><span>Implemented ManyChat automation workflows for customer interactions & lead generation.</span></li>
+            <li class="flex gap-3"><span class="text-purple-400 mt-0.5">▸</span><span>Executed influencer marketing campaigns — research, outreach, collaboration & performance tracking.</span></li>
+            <li class="flex gap-3"><span class="text-purple-400 mt-0.5">▸</span><span>Managed online communities & responded to customer inquiries — driving platform growth.</span></li>
           </ul>
         </div>
       </div>
@@ -601,55 +555,45 @@
 </section>
 
 <!-- PROJECTS -->
-<section id="projects" class="relative py-24 md:py-32">
+<section id="projects" class="relative py-28 md:py-36">
   <div class="max-w-7xl mx-auto px-5 md:px-8">
-    <div class="text-center mb-14 reveal">
-      <span class="text-sm uppercase tracking-[0.3em] text-pink-400 font-semibold">Selected Work</span>
-      <h2 class="text-4xl md:text-6xl font-bold text-white mt-3">Featured <span class="gradient-text">Projects</span></h2>
-      <p class="text-white/60 mt-4 max-w-xl mx-auto">A glimpse into the campaigns, content series & creative assets I've shipped.</p>
+    <div class="flex items-center justify-between mb-10">
+      <span class="eyebrow reveal-text">Selected Work</span>
+      <span class="text-white/30 text-sm serif hidden md:block">(04)</span>
     </div>
 
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <!-- Project 1 -->
-      <div class="proj-card glass rounded-3xl overflow-hidden reveal">
-        <div class="proj-img aspect-[4/5] flex items-center justify-center relative">
+    <h2 class="text-4xl md:text-6xl font-bold text-white leading-tight max-w-4xl big-text">
+      Campaigns & <span class="gradient-text">creative projects</span>.
+    </h2>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-14">
+      <div class="proj-card glass rounded-3xl overflow-hidden reveal-card">
+        <div class="proj-img aspect-[4/5] flex items-center justify-center">
           <div class="relative text-center text-white p-6">
             <div class="text-6xl mb-3">📸</div>
-            <div class="text-2xl font-bold">Festive Campaign Series</div>
+            <div class="text-2xl font-bold">Festive Campaigns</div>
           </div>
           <div class="absolute top-4 left-4 glass px-3 py-1.5 rounded-full text-xs font-semibold text-white">Canva • CorelDRAW</div>
         </div>
         <div class="p-6">
           <h3 class="text-xl font-bold text-white">Mirchandani — Festive Creatives</h3>
-          <p class="text-white/65 text-sm mt-2">A collection of festive posts, carousels and stories designed for seasonal campaigns — boosting impressions by 45%.</p>
-          <div class="mt-4 flex flex-wrap gap-2">
-            <span class="pill px-3 py-1 text-xs rounded-full text-white/80">Brand Design</span>
-            <span class="pill px-3 py-1 text-xs rounded-full text-white/80">Social Posts</span>
-          </div>
+          <p class="text-white/65 text-sm mt-2">Seasonal posts, carousels & stories — impressions up 45%.</p>
         </div>
       </div>
-
-      <!-- Project 2 -->
-      <div class="proj-card glass rounded-3xl overflow-hidden reveal reveal-delay-1">
+      <div class="proj-card glass rounded-3xl overflow-hidden reveal-card">
         <div class="proj-img aspect-[4/5] flex items-center justify-center" style="background: linear-gradient(135deg,#a855f7,#6366f1,#1e1b4b);">
           <div class="relative text-center text-white p-6">
             <div class="text-6xl mb-3">🎬</div>
-            <div class="text-2xl font-bold">Reels & Video Content</div>
+            <div class="text-2xl font-bold">Reels Series</div>
           </div>
           <div class="absolute top-4 left-4 glass px-3 py-1.5 rounded-full text-xs font-semibold text-white">After Effects • AI</div>
         </div>
         <div class="p-6">
-          <h3 class="text-xl font-bold text-white">Short-Form Video Reel Series</h3>
-          <p class="text-white/65 text-sm mt-2">Concept, script, editing and motion graphics for viral-style reels across multiple platforms.</p>
-          <div class="mt-4 flex flex-wrap gap-2">
-            <span class="pill px-3 py-1 text-xs rounded-full text-white/80">Video Editing</span>
-            <span class="pill px-3 py-1 text-xs rounded-full text-white/80">Storytelling</span>
-          </div>
+          <h3 class="text-xl font-bold text-white">Short-Form Video Content</h3>
+          <p class="text-white/65 text-sm mt-2">Concept, script, editing & motion graphics for viral reels.</p>
         </div>
       </div>
-
-      <!-- Project 3 -->
-      <div class="proj-card glass rounded-3xl overflow-hidden reveal reveal-delay-2">
+      <div class="proj-card glass rounded-3xl overflow-hidden reveal-card">
         <div class="proj-img aspect-[4/5] flex items-center justify-center" style="background: linear-gradient(135deg,#ffb86b,#ff3ec9,#a855f7);">
           <div class="relative text-center text-white p-6">
             <div class="text-6xl mb-3">🤖</div>
@@ -659,16 +603,10 @@
         </div>
         <div class="p-6">
           <h3 class="text-xl font-bold text-white">Dona Veda — Lead Gen Flow</h3>
-          <p class="text-white/65 text-sm mt-2">Built automated DM workflows on Instagram & Facebook — streamlined customer interactions and generated qualified leads on autopilot.</p>
-          <div class="mt-4 flex flex-wrap gap-2">
-            <span class="pill px-3 py-1 text-xs rounded-full text-white/80">Automation</span>
-            <span class="pill px-3 py-1 text-xs rounded-full text-white/80">Growth</span>
-          </div>
+          <p class="text-white/65 text-sm mt-2">Automated DM workflows turning chats into qualified leads.</p>
         </div>
       </div>
-
-      <!-- Project 4 -->
-      <div class="proj-card glass rounded-3xl overflow-hidden reveal">
+      <div class="proj-card glass rounded-3xl overflow-hidden reveal-card">
         <div class="proj-img aspect-[4/5] flex items-center justify-center" style="background: linear-gradient(135deg,#6366f1,#06b6d4,#a855f7);">
           <div class="relative text-center text-white p-6">
             <div class="text-6xl mb-3">⭐</div>
@@ -678,16 +616,10 @@
         </div>
         <div class="p-6">
           <h3 class="text-xl font-bold text-white">Multi-Creator Collaboration</h3>
-          <p class="text-white/65 text-sm mt-2">End-to-end influencer campaigns — research, outreach, brief creation, collaboration management & performance tracking.</p>
-          <div class="mt-4 flex flex-wrap gap-2">
-            <span class="pill px-3 py-1 text-xs rounded-full text-white/80">Marketing</span>
-            <span class="pill px-3 py-1 text-xs rounded-full text-white/80">Partnerships</span>
-          </div>
+          <p class="text-white/65 text-sm mt-2">End-to-end campaigns — research, outreach & performance.</p>
         </div>
       </div>
-
-      <!-- Project 5 -->
-      <div class="proj-card glass rounded-3xl overflow-hidden reveal reveal-delay-1">
+      <div class="proj-card glass rounded-3xl overflow-hidden reveal-card">
         <div class="proj-img aspect-[4/5] flex items-center justify-center" style="background: linear-gradient(135deg,#ff3ec9,#ec4899,#f59e0b);">
           <div class="relative text-center text-white p-6">
             <div class="text-6xl mb-3">📅</div>
@@ -697,95 +629,88 @@
         </div>
         <div class="p-6">
           <h3 class="text-xl font-bold text-white">30-Day Social Blueprint</h3>
-          <p class="text-white/65 text-sm mt-2">Month-long content strategies across IG, FB, LinkedIn & X — designed for consistency, engagement and measurable growth.</p>
-          <div class="mt-4 flex flex-wrap gap-2">
-            <span class="pill px-3 py-1 text-xs rounded-full text-white/80">Strategy</span>
-            <span class="pill px-3 py-1 text-xs rounded-full text-white/80">Planning</span>
-          </div>
+          <p class="text-white/65 text-sm mt-2">Month-long content strategy across IG, FB, LinkedIn & X.</p>
         </div>
       </div>
-
-      <!-- Project 6 -->
-      <div class="proj-card glass rounded-3xl overflow-hidden reveal reveal-delay-2">
+      <div class="proj-card glass rounded-3xl overflow-hidden reveal-card">
         <div class="proj-img aspect-[4/5] flex items-center justify-center" style="background: linear-gradient(135deg,#a855f7,#ec4899,#ffb86b);">
           <div class="relative text-center text-white p-6">
             <div class="text-6xl mb-3">🧠</div>
-            <div class="text-2xl font-bold">AI Creative Workflow</div>
+            <div class="text-2xl font-bold">AI Workflows</div>
           </div>
           <div class="absolute top-4 left-4 glass px-3 py-1.5 rounded-full text-xs font-semibold text-white">AI Tools</div>
         </div>
         <div class="p-6">
           <h3 class="text-xl font-bold text-white">AI-Powered Content Engine</h3>
-          <p class="text-white/65 text-sm mt-2">Built AI-assisted workflows for ideation, script writing, image generation and first-cut editing — 3× faster output.</p>
-          <div class="mt-4 flex flex-wrap gap-2">
-            <span class="pill px-3 py-1 text-xs rounded-full text-white/80">AI</span>
-            <span class="pill px-3 py-1 text-xs rounded-full text-white/80">Productivity</span>
-          </div>
+          <p class="text-white/65 text-sm mt-2">AI-assisted workflows for 3× faster creative output.</p>
         </div>
       </div>
-
-    </div>
-
-    <div class="text-center mt-12 reveal">
-      <a href="#contact" class="btn-ghost text-white font-semibold px-7 py-4 rounded-full inline-flex items-center gap-2">
-        Ask for full portfolio →
-      </a>
     </div>
   </div>
 </section>
 
 <!-- EDUCATION -->
-<section id="education" class="relative py-24 md:py-32">
+<section id="education" class="relative py-28 md:py-36">
   <div class="max-w-7xl mx-auto px-5 md:px-8">
-    <div class="text-center mb-14 reveal">
-      <span class="text-sm uppercase tracking-[0.3em] text-pink-400 font-semibold">Academic</span>
-      <h2 class="text-4xl md:text-6xl font-bold text-white mt-3">Education <span class="gradient-text">& Learning</span></h2>
+    <div class="flex items-center justify-between mb-10">
+      <span class="eyebrow reveal-text">Academic</span>
+      <span class="text-white/30 text-sm serif hidden md:block">(05)</span>
     </div>
 
-    <div class="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-      <div class="glass rounded-3xl p-7 proj-card reveal">
+    <h2 class="text-4xl md:text-6xl font-bold text-white leading-tight max-w-4xl big-text">
+      <span class="gradient-text">Education</span> & learning path.
+    </h2>
+
+    <div class="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto mt-14">
+      <div class="glass rounded-3xl p-7 proj-card reveal-card">
         <div class="text-4xl mb-4">🎓</div>
         <div class="gradient-text-warm font-bold text-sm">2022</div>
         <h3 class="text-xl font-bold text-white mt-2">BA in Economics</h3>
-        <p class="text-white/60 mt-1">Siddharth College, Mumbai</p>
+        <p class="text-white/60 mt-1 serif">Siddharth College, Mumbai</p>
         <div class="mt-5 h-px bg-gradient-to-r from-pink-500/50 to-transparent"></div>
-        <p class="text-sm text-white/50 mt-4">Graduation with a focus on analytical thinking and market dynamics.</p>
+        <p class="text-sm text-white/50 mt-4">Graduation in analytical thinking & market dynamics.</p>
       </div>
-
-      <div class="glass rounded-3xl p-7 proj-card reveal reveal-delay-1">
+      <div class="glass rounded-3xl p-7 proj-card reveal-card">
         <div class="text-4xl mb-4">📚</div>
         <div class="gradient-text-warm font-bold text-sm">2018</div>
         <h3 class="text-xl font-bold text-white mt-2">HSC — Commerce</h3>
-        <p class="text-white/60 mt-1">K.G. Mittal College</p>
+        <p class="text-white/60 mt-1 serif">K.G. Mittal College</p>
         <div class="mt-5 h-px bg-gradient-to-r from-purple-500/50 to-transparent"></div>
-        <p class="text-sm text-white/50 mt-4">Higher secondary with specialization in business studies.</p>
+        <p class="text-sm text-white/50 mt-4">Higher secondary specializing in business studies.</p>
       </div>
-
-      <div class="glass rounded-3xl p-7 proj-card reveal reveal-delay-2">
+      <div class="glass rounded-3xl p-7 proj-card reveal-card">
         <div class="text-4xl mb-4">✏️</div>
         <div class="gradient-text-warm font-bold text-sm">2016</div>
         <h3 class="text-xl font-bold text-white mt-2">SSC</h3>
-        <p class="text-white/60 mt-1">V.V.S.S. Vidya Mandir</p>
+        <p class="text-white/60 mt-1 serif">V.V.S.S. Vidya Mandir</p>
         <div class="mt-5 h-px bg-gradient-to-r from-indigo-500/50 to-transparent"></div>
-        <p class="text-sm text-white/50 mt-4">Secondary school certificate — foundational academic journey.</p>
+        <p class="text-sm text-white/50 mt-4">Secondary school certificate — foundational journey.</p>
       </div>
     </div>
   </div>
 </section>
 
 <!-- CONTACT -->
-<section id="contact" class="relative py-24 md:py-32">
+<section id="contact" class="relative py-28 md:py-36">
   <div class="max-w-5xl mx-auto px-5 md:px-8">
-    <div class="relative reveal">
+    <div class="flex items-center justify-between mb-10">
+      <span class="eyebrow reveal-text">Contact</span>
+      <span class="text-white/30 text-sm serif hidden md:block">(06)</span>
+    </div>
+
+    <div class="relative reveal-card">
       <div class="absolute -inset-1 rounded-[2.5rem] opacity-50 blur-3xl"
            style="background: linear-gradient(135deg,#ff3ec9,#a855f7,#6366f1);"></div>
       <div class="relative glass rounded-[2rem] md:rounded-[2.5rem] p-8 md:p-14 overflow-hidden">
         <div class="blob" style="width:250px; height:250px; background:#ff3ec9; top:-50px; right:-50px;"></div>
 
         <div class="relative">
-          <span class="text-sm uppercase tracking-[0.3em] text-pink-400 font-semibold">Contact</span>
-          <h2 class="text-4xl md:text-6xl font-bold text-white mt-3">Let's create something <span class="gradient-text">viral</span> together ✨</h2>
-          <p class="text-white/70 mt-5 text-lg max-w-2xl">Have a brand that needs to grow? A campaign idea bouncing in your head? Let's talk — I reply within 24 hours.</p>
+          <h2 class="text-4xl md:text-6xl font-bold text-white big-text">
+            Let's create something <span class="gradient-text">viral</span> <span class="serif text-pink-300">together</span> ✨
+          </h2>
+          <p class="text-white/70 mt-5 text-lg max-w-2xl reveal-text">
+            Have a brand that needs to grow? A campaign idea bouncing in your head? Let's talk — I reply within 24 hours.
+          </p>
 
           <div class="mt-10 grid sm:grid-cols-2 gap-4">
             <a href="mailto:babarpuja2000@gmail.com" class="glass rounded-2xl p-5 flex items-center gap-4 proj-card">
@@ -844,74 +769,232 @@
            style="background: linear-gradient(135deg,#ff3ec9,#a855f7);">PB</div>
       <span class="text-white/70 text-sm">© 2026 Pooja Babar. Designed with 💜 in Mumbai.</span>
     </div>
-    <div class="flex gap-5 text-sm text-white/60">
-      <a href="#home" class="hover:text-white">Home</a>
-      <a href="#about" class="hover:text-white">About</a>
-      <a href="#projects" class="hover:text-white">Work</a>
-      <a href="#contact" class="hover:text-white">Contact</a>
-    </div>
+    <div class="text-white/40 text-xs serif">End of page — scroll back up ↑</div>
   </div>
 </footer>
 
 <!-- JS -->
 <script>
-  // Navbar scroll state
-  const nav = document.getElementById('navbar');
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 30) nav.classList.add('nav-scrolled');
-    else nav.classList.remove('nav-scrolled');
+  // ============== SMOOTH SCROLL (native) ==============
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      const targetId = link.getAttribute('href');
+      if (targetId === '#' || targetId.length < 2) return;
+      const target = document.querySelector(targetId);
+      if (!target) return;
+      e.preventDefault();
+      const top = target.getBoundingClientRect().top + window.scrollY - 60;
+      window.scrollTo({ top, behavior: 'smooth' });
+    });
   });
 
-  // Mobile menu
+  // ============== GSAP SETUP ==============
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Preloader
+  const preloader = document.getElementById('preloader');
+  const fill = document.getElementById('preloaderFill');
+  gsap.to(fill, { width: '100%', duration: 1, ease: 'power2.inOut' });
+  gsap.to(preloader, {
+    opacity: 0, yPercent: -10, duration: 0.8, ease: 'power2.inOut', delay: 1.1,
+    onComplete: () => { preloader.style.display = 'none'; initAnimations(); }
+  });
+
+  function initAnimations(){
+    // Navbar
+    const nav = document.getElementById('navbar');
+    ScrollTrigger.create({
+      start: 'top -30',
+      onUpdate: (self) => {
+        if (self.direction === 1 && window.scrollY > 30) nav.classList.add('nav-scrolled');
+        else if (window.scrollY <= 30) nav.classList.remove('nav-scrolled');
+      }
+    });
+
+    // Hero title split reveal
+    const heroSpans = document.querySelectorAll('.hero-title .inline-block');
+    heroSpans.forEach((el, i) => {
+      gsap.fromTo(el,
+        { yPercent: 120, rotate: 6 },
+        { yPercent: 0, rotate: 0, duration: 1.1, delay: 0.2 + i*0.15, ease: 'expo.out' }
+      );
+    });
+
+    // Generic reveal-text fade
+    gsap.utils.toArray('.reveal-text').forEach((el, i) => {
+      gsap.fromTo(el,
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.9, delay: 0.1 + (i%5)*0.05, ease: 'power2.out' }
+      );
+    });
+
+    // Hero stats
+    gsap.from('.stat-card', {
+      y: 50, opacity: 0, duration: 1, stagger: 0.15, delay: 0.8, ease: 'expo.out'
+    });
+
+    // Counters
+    document.querySelectorAll('.counter').forEach(el => {
+      const target = +el.dataset.target;
+      const obj = { v: 0 };
+      ScrollTrigger.create({
+        trigger: el, start: 'top 85%',
+        onEnter: () => {
+          gsap.to(obj, {
+            v: target, duration: 1.8, ease: 'power2.out',
+            onUpdate: () => { el.textContent = Math.round(obj.v); }
+          });
+        },
+        once: true
+      });
+    });
+
+    // Big section titles: char-by-char on scroll
+    gsap.utils.toArray('.big-text').forEach(title => {
+      // Wrap each word in span; use simpler word-based reveal
+      const text = title.innerHTML;
+      // Skip if already processed
+      const words = title.textContent.split(' ');
+      title.innerHTML = '';
+      words.forEach((w, i) => {
+        const span = document.createElement('span');
+        span.style.display = 'inline-block';
+        span.style.marginRight = '0.3em';
+        span.style.opacity = '0';
+        span.style.transform = 'translateY(40px)';
+        span.innerHTML = w;
+        // keep gradient spans intact by re-parsing: fallback just set text
+        span.textContent = w;
+        title.appendChild(span);
+      });
+
+      const wordEls = title.querySelectorAll('span');
+      ScrollTrigger.create({
+        trigger: title, start: 'top 80%',
+        onEnter: () => {
+          gsap.to(wordEls, {
+            opacity: 1, y: 0, duration: 0.9, stagger: 0.05, ease: 'expo.out'
+          });
+        },
+        once: true
+      });
+    });
+
+    // Project / glass reveal cards
+    gsap.utils.toArray('.reveal-card').forEach((card, i) => {
+      gsap.fromTo(card,
+        { opacity: 0, y: 60, rotateX: 5 },
+        {
+          opacity: 1, y: 0, rotateX: 0, duration: 1,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: card, start: 'top 85%' }
+        }
+      );
+    });
+
+    // Skill bars
+    gsap.utils.toArray('.skill-fill').forEach(bar => {
+      const w = bar.getAttribute('data-width') || '80';
+      ScrollTrigger.create({
+        trigger: bar, start: 'top 85%',
+        onEnter: () => {
+          gsap.fromTo(bar, { width: '0%' }, { width: w + '%', duration: 1.6, ease: 'expo.out' });
+        },
+        once: true
+      });
+    });
+
+    // Marquee loop (GSAP ticker for buttery smooth)
+    const marquee = document.querySelector('.marquee-track');
+    if (marquee) {
+      const half = marquee.scrollWidth / 2;
+      gsap.to(marquee, {
+        x: -half, duration: 40, ease: 'none', repeat: -1,
+        modifiers: {
+          x: gsap.utils.unitize(x => parseFloat(x) % half)
+        }
+      });
+    }
+
+    // Timeline dot pulse
+    gsap.to('.dot', {
+      scale: 1.2, boxShadow: '0 0 30px rgba(255,62,201,1)',
+      duration: 1.2, yoyo: true, repeat: -1, ease: 'sine.inOut', stagger: 0.4
+    });
+
+    // Floating blobs parallax
+    gsap.utils.toArray('.blob').forEach((blob, i) => {
+      gsap.to(blob, {
+        y: -40 - i*10, x: 30 + i*5,
+        duration: 6 + i, yoyo: true, repeat: -1, ease: 'sine.inOut'
+      });
+    });
+
+    // Section pins: subtle background color shift on scroll
+    const sections = ['about','skills','experience','projects','education','contact'];
+    sections.forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      ScrollTrigger.create({
+        trigger: el, start: 'top 80%', end: 'bottom top',
+        onEnter: () => el.classList.add('in-view')
+      });
+    });
+
+    // Refresh after images/layout (safe)
+    ScrollTrigger.refresh();
+  }
+
+  // ============== Mobile menu ==============
   const menuBtn = document.getElementById('menuBtn');
   const mobileMenu = document.getElementById('mobileMenu');
   menuBtn?.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
-  document.querySelectorAll('.mobile-link').forEach(l => l.addEventListener('click', () => mobileMenu.classList.add('hidden')));
+  document.querySelectorAll('.mobile-link').forEach(l =>
+    l.addEventListener('click', () => mobileMenu.classList.add('hidden'))
+  );
 
-  // Reveal on scroll
-  const revealEls = document.querySelectorAll('.reveal');
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((e, i) => {
-      if (e.isIntersecting) {
-        e.target.classList.add('in');
-        // If skill-fill inside, animate width
-        e.target.querySelectorAll('.skill-fill').forEach(bar => {
-          bar.style.width = (bar.dataset.width || 80) + '%';
-        });
-        io.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.15 });
-  revealEls.forEach(el => io.observe(el));
-
-  // Counters
-  const counters = document.querySelectorAll('.stat-num');
-  const counterIO = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (!e.isIntersecting) return;
-      const el = e.target;
-      const target = +el.dataset.target;
-      let cur = 0;
-      const step = Math.max(1, Math.floor(target / 60));
-      const iv = setInterval(() => {
-        cur += step;
-        if (cur >= target) { cur = target; clearInterval(iv); }
-        el.textContent = cur + (target >= 100 ? '%' : '+');
-      }, 22);
-      counterIO.unobserve(el);
-    });
-  }, { threshold: 0.5 });
-  counters.forEach(c => counterIO.observe(c));
-
-  // Cursor glow
+  // ============== Cursor glow ==============
   const glow = document.getElementById('cursorGlow');
   if (glow && window.matchMedia('(pointer:fine)').matches) {
+    const mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
+    const pos = { x: mouse.x, y: mouse.y };
     window.addEventListener('mousemove', (e) => {
-      glow.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
+      mouse.x = e.clientX; mouse.y = e.clientY;
     });
+    function tick(){
+      pos.x += (mouse.x - pos.x) * 0.08;
+      pos.y += (mouse.y - pos.y) * 0.08;
+      glow.style.transform = `translate(${pos.x}px, ${pos.y}px) translate(-50%, -50%)`;
+      requestAnimationFrame(tick);
+    }
+    tick();
   } else if (glow) {
     glow.style.display = 'none';
   }
+
+  // ============== Parallax on mouse move for hero ==============
+  const heroSection = document.getElementById('home');
+  if (heroSection) {
+    heroSection.addEventListener('mousemove', (e) => {
+      const rect = heroSection.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      gsap.to('.stat-card', { x: -x*15, y: -y*15, duration: 1.2, ease: 'power2.out', stagger: 0.03 });
+    });
+  }
+
+  // ============== Tilt on project cards ==============
+  document.querySelectorAll('.proj-card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      gsap.to(card, { rotateY: x*8, rotateX: -y*8, duration: 0.6, ease: 'power2.out', transformPerspective: 900 });
+    });
+    card.addEventListener('mouseleave', () => {
+      gsap.to(card, { rotateY: 0, rotateX: 0, duration: 0.6, ease: 'power2.out' });
+    });
+  });
 </script>
 </body>
 </html>
